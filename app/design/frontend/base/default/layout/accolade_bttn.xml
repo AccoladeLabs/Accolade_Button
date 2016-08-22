@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+	<customer_account>
+		<reference name="customer_account_navigation">
+			<action method="addLink" translate="label" module="accolade_bttn">
+				<name>accoladebttn_customer</name>
+				<path>accoladebttn/customer/</path>
+				<label>My Bt.tn</label>
+			</action>
+		</reference>
+	</customer_account>
+	<accolade_bttn_customer_index>
+		<update handle="customer_account" />
+		<reference name="my.account.wrapper">
+			<block type="core/template" name="accolade_bttn_content" template="accolade_bttn.phtml" /> 
+		</reference>
+	</accolade_bttn_customer_index>
+</layout>

@@ -24,20 +24,20 @@
     </global>
     <frontend>
         <routers>
-            <accoladebttn>
+            <accolade_bttn>
                 <use>standard</use>
                 <args>
                     <module>Accolade_Bttn</module>
                     <frontName>accoladebttn</frontName>
                 </args>
-            </accoladebttn>
+            </accolade_bttn>
         </routers>
 		<layout>
-				<updates>
-					<accolade_bttn>
-						<file>accolade_bttn.xml</file> <!-- Our layout file name-->
-					</accolade_bttn>
-				</updates>
+			<updates>
+				<accolade_bttn module="Accolade_Bttn">
+					<file>accolade_bttn.xml</file> <!-- Our layout file name-->
+				</accolade_bttn>
+			</updates>
 		</layout>
     </frontend>
 	<adminhtml>
