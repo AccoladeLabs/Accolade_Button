@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Accolade_Button>
+            <version>0.1.0</version>
+        </Accolade_Button>
+    </modules>
+    <global>
+        <models>
+            <accolade_button>
+                <class>Accolade_Button_Model</class>
+            </accolade_button>
+        </models>
+        <helpers>
+            <accolade_button>
+                <class>Accolade_Button_Helper</class>
+            </accolade_button>
+        </helpers>
+        <blocks>
+            <accolade_button>
+                <class>Accolade_Button_Block</class>
+            </accolade_button>
+		</blocks>
+    </global>
+    <frontend>
+        <routers>
+            <accoladebutton>
+                <use>standard</use>
+                <args>
+                    <module>Accolade_Button</module>
+                    <frontName>accoladebutton</frontName>
+                </args>
+            </accoladebutton>
+        </routers>
+		<layout>
+				<updates>
+					<accolade_button>
+						<file>accolade_button.xml</file> <!-- Our layout file name-->
+					</accolade_button>
+				</updates>
+		</layout>
+    </frontend>
+	
+
+</config>
