@@ -1,0 +1,25 @@
+# Accolade Bt.tn Magento Module v 0.1.0
+
+## Installation
+
+Via modman:
+
+```
+modman clone git@bitbucket.org:mage_fi/Accolade_Bttn.git
+```
+
+Alternatively, you can copy the `app/` directory to your Magento root.
+
+## Current Features
+
+## Roadmap
+
+### v1.0
+* Manage bt.tn association
+* Set up order to be triggered on button press
+* Pay for order with store credit
+* Error handling
+
+### \> v1.0
+* PayPal integration
+* Credit card integration
