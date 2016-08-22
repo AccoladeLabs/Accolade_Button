@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Accolade_Bttn>
+            <version>0.1.0</version>
+        </Accolade_Bttn>
+    </modules>
+    <global>
+        <models>
+            <accolade_bttn>
+                <class>Accolade_Bttn_Model</class>
+            </accolade_bttn>
+        </models>
+        <helpers>
+            <accolade_bttn>
+                <class>Accolade_Bttn_Helper</class>
+            </accolade_bttn>
+        </helpers>
+        <blocks>
+            <accolade_bttn>
+                <class>Accolade_Bttn_Block</class>
+            </accolade_bttn>
+		</blocks>
+    </global>
+    <frontend>
+        <routers>
+            <accoladebttn>
+                <use>standard</use>
+                <args>
+                    <module>Accolade_Bttn</module>
+                    <frontName>accoladebttn</frontName>
+                </args>
+            </accoladebttn>
+        </routers>
+		<layout>
+				<updates>
+					<accolade_bttn>
+						<file>accolade_bttn.xml</file> <!-- Our layout file name-->
+					</accolade_bttn>
+				</updates>
+		</layout>
+    </frontend>
+	
+
+</config>
