@@ -14,12 +14,17 @@ Alternatively, you can copy the `app/` directory to your Magento root.
 
 ## Roadmap
 
-### v1.0
+### v0.1.0
 * Manage bt.tn association
 * Set up order to be triggered on button press
-* Pay for order with store credit
+  - Use previous order as template or wish list as template
+  - Select shipping, billing, and payment
+* Check/money order
 * Error handling
 
-### \> v1.0
+### \> v0.1.0
 * PayPal integration
 * Credit card integration
+
+### Enterprise only
+* Pay for order with store credit
