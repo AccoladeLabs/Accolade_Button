@@ -2,3 +2,4 @@ app/code/local/Accolade/Bttn
 app/design/frontend/base/default/layout/accolade_bttn.xml
 app/design/frontend/base/default/template/accolade_bttn.phtml
 app/etc/modules/Accolade_Bttn.xml
+app/design/frontend/default/default/template/wishlist

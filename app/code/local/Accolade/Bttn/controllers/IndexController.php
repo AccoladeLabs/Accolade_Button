@@ -3,32 +3,62 @@ class Accolade_Bttn_IndexController extends Mage_Adminhtml_Controller_Action
 {
     public function preDispatch ()
     {
-        Mage::app ()->getRequest ()->setParam ( 'forwarded', true );
-        return parent::preDispatch ();
+        Mage::app()->getRequest()->setParam ('forwarded', true);
+        return parent::preDispatch();
     }
 
     public function indexAction ()
     {
-		$orderId = $_GET['id'];
-		$order = Mage::getModel('sales/order')->loadByIncrementId($orderId);
-		if($order->getIncrementId()){													
-			if(!$order->canInvoice()){
-				Mage::log('Cannot create an invoice.');
+		$customerId = $this->getRequest()->getParam('customer');
+		$customer = Mage::getModel('customer/customer')->load($customerId);
+		$customerData = $customer->getData();
+		
+		$quote = Mage::getModel('sales/quote')->setStoreId($customer->getStoreId());
+		
+		$quote->assignCustomer($customer);
+
+		$wishList = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($customerId);
+		$wishListItemCollection = $wishList->getItemCollection();
+
+		if (count($wishListItemCollection)) {
+			foreach ($wishListItemCollection as $item) {
+				$productId = $item->getOptionByCode('simple_product')->getValue();
+				$product = Mage::getModel('catalog/product')->load($productId);				
+				$quote->addProduct($product, $item->getQty());
 			}
-			 Mage::log($order->getAllVisibleItems());
-			$invoice = Mage::getModel('sales/service_order', $order)->prepareInvoice();
-			if (!$invoice->getTotalQty()) {
-				Mage::log('Cannot create an invoice without products.');
-			}
-			//$invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_ONLINE);
-			$invoice->setRequestedCaptureCase(Mage_Sales_Model_Order_Invoice::CAPTURE_OFFLINE);
-			$invoice->register();
-			$transactionSave = Mage::getModel('core/resource_transaction')
-			->addObject($invoice)
-			->addObject($invoice->getOrder());
-			 
-			$transactionSave->save();
 		}
+
+		$address = $customer->getDefaultBilling();
+		$customerAddress = Mage::getModel('customer/address')->load($address);
+
+		$addressData = array(
+				'firstname' => $customer->getFirstname(),
+				'lastname' => $customer->getLastname(),
+				'street' => $customerAddress->getStreet()[0],
+				'city' => $customerAddress->getCity(),
+				'postcode' => $customerAddress->getPostcode(),
+				'telephone' => $customerAddress->getTelephone(),
+				'country_id' => $customerAddress->getCountry(),
+				'region_id' => $customerAddress->getRegionId(),
+		);
+
+		$billingAddress = $quote->getBillingAddress()->addData($addressData);
+		$shippingAddress = $quote->getShippingAddress()->addData($addressData);
+
+		$shippingAddress->setCollectShippingRates(true)->collectShippingRates()
+						->setShippingMethod('flatrate_flatrate')
+						->setPaymentMethod('checkmo');
+
+		$quote->getPayment()->importData(array('method' => 'checkmo'));
+
+		$quote->collectTotals()->save();
+
+		$service = Mage::getModel('sales/service_quote', $quote);
+		$service->submitAll();
+		$order = $service->getOrder();
+
+		printf("Created order %s\n", $order->getIncrementId());
+		
     }
 }
 ?>
