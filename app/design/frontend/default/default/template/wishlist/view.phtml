@@ -83,9 +83,9 @@
                 wishlistAllCartForm.form.submit();
             }
 			
-			//# Generate an URL to test bt.tn request
-            function createBttnTemplate() {
-				window.location.href='<?php echo $this->getUrl('../../../accoladebttn/index?customer='.Mage::getSingleton('customer/session')->getCustomer()->getId()) ?>';
+			//# Generate an URL to test automatic checkout
+            function bttnTest() {
+				window.location.href='<?php echo Mage::getBaseUrl().'accoladebttn/index?customer='.Mage::getSingleton('customer/session')->getCustomer()->getId() ?>';
             }
         //]]>
         </script>
