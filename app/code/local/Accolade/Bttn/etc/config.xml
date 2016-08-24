@@ -21,6 +21,26 @@
                 <class>Accolade_Bttn_Block</class>
             </accolade_bttn>
 		</blocks>
+		<resources>
+			<accoladebttn_setup>
+				<setup>
+					<module>Accolade_Bttn</module>
+				</setup>
+				<connection>
+					<use>core_setup</use>
+				</connection>
+			</accoladebttn_setup>
+			<accoladebttn_write>
+				<connection>
+					<use>core_write</use>
+				</connection>
+			</accoladebttn_write>
+			<accoladebttn_read>
+				<connection>
+					<use>core_read</use>
+				</connection>
+			</accoladebttn_read>
+		</resources>
     </global>
     <frontend>
         <routers>
