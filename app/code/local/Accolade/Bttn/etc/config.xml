@@ -9,7 +9,16 @@
         <models>
             <accolade_bttn>
                 <class>Accolade_Bttn_Model</class>
+				<resourceModel>accolade_bttn_resource</resourceModel>
             </accolade_bttn>
+            <accolade_bttn_resource>
+                <class>Accolade_Bttn_Model_Resource</class>
+                <entities>
+                    <bttn>
+                        <table>accolade_bttn</table>
+                    </bttn>
+                </entities>
+            </accolade_bttn_resource>
         </models>
         <helpers>
             <accolade_bttn>

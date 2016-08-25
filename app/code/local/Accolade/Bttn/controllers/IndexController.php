@@ -3,8 +3,8 @@ class Accolade_Bttn_IndexController extends Mage_Adminhtml_Controller_Action
 {
     public function preDispatch ()
     {
-        Mage::app()->getRequest()->setParam ('forwarded', true);
-        return parent::preDispatch();
+        Mage::app ()->getRequest ()->setParam ( 'forwarded', true );
+        return parent::preDispatch ();
     }
 
     public function indexAction ()
@@ -45,11 +45,14 @@ class Accolade_Bttn_IndexController extends Mage_Adminhtml_Controller_Action
 		$billingAddress = $quote->getBillingAddress()->addData($addressData);
 		$shippingAddress = $quote->getShippingAddress()->addData($addressData);
 
+		$shippingMethod = Mage::helper('accolade_bttn')->getShippingMethod($customerId);
+		$paymentMethod = Mage::helper('accolade_bttn')->getPaymentMethod($customerId);
+		
 		$shippingAddress->setCollectShippingRates(true)->collectShippingRates()
-						->setShippingMethod('flatrate_flatrate')
-						->setPaymentMethod('checkmo');
+						->setShippingMethod($shippingMethod)
+						->setPaymentMethod($paymentMethod);
 
-		$quote->getPayment()->importData(array('method' => 'checkmo'));
+		$quote->getPayment()->importData(array('method' => $paymentMethod));
 
 		$quote->collectTotals()->save();
 
@@ -61,4 +64,3 @@ class Accolade_Bttn_IndexController extends Mage_Adminhtml_Controller_Action
 		
     }
 }
-?>
