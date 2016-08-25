@@ -9,7 +9,8 @@ class Accolade_Bttn_IndexController extends Mage_Adminhtml_Controller_Action
 
     public function indexAction ()
     {
-		$customerId = $this->getRequest()->getParam('customer');
+		$bid = $this->getRequest()->getParam('bid');
+		$customerId = Mage::helper('accolade_bttn')->getCustomerIdFromBid($bid);
 		$customer = Mage::getModel('customer/customer')->load($customerId);
 		$customerData = $customer->getData();
 		

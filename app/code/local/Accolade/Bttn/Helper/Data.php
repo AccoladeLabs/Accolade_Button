@@ -36,4 +36,12 @@ class Accolade_Bttn_Helper_Data extends Mage_Core_Helper_Abstract {
 			return $paymentMethod->getColumnValues('payment_method')[0];
 	}
 	
+	public function getCustomerIdFromBid($bid)
+	{
+		$customerId = Mage::getModel('accolade_bttn/bttn')->getCollection()
+			->addFieldToFilter('button_id', $bid)
+			->addFieldToSelect('customer_id');
+			return $customerId->getColumnValues('customer_id')[0];
+	}
+	
 }
