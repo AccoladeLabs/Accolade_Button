@@ -64,8 +64,14 @@ $customerPostCode = $customerShippingData['postcode'];
 			} else {
 				echo $this->__('Payment Method: ').$paymentTitle;
 			}
+			
+			//# display test URL
+			if($bttnInfoArr['button_id']){
+				$testURL = Mage::getBaseUrl().'accoladebttn/index?bid='.$bttnInfoArr['button_id'];
+				echo '<br/><br/><a href='.$testURL.'>Test URL</a>';
+			}
 			?>
-			<br /><br /><br /><br />
+			<br /><br /><br />
             </li>
         </ol>
     </div>
