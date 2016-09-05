@@ -8,8 +8,9 @@ class Accolade_Bttn_Helper_Data extends Mage_Core_Helper_Abstract {
 			->addFieldToFilter('customer_id', $customerId)
 			->addFieldToSelect('button_id')
 			->addFieldToSelect('shipping_method')
-			->addFieldToSelect('payment_method');
-			return $bttnInfoCollection->getData();
+			->addFieldToSelect('payment_method')
+			->addFieldToSelect('order_method');
+		return $bttnInfoCollection->getData();
 	}
 	
 	public function getCustomerEntity($customerId)
@@ -17,23 +18,7 @@ class Accolade_Bttn_Helper_Data extends Mage_Core_Helper_Abstract {
 		$customerEntityId = Mage::getModel('accolade_bttn/bttn')->getCollection()
 			->addFieldToFilter('customer_id', $customerId)
 			->addFieldToSelect('entity_id');
-			return $customerEntityId->getColumnValues('entity_id')[0];
-	}
-	
-	public function getShippingMethod($customerId)
-	{
-		$shippingMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
-			->addFieldToFilter('customer_id', $customerId)
-			->addFieldToSelect('shipping_method');
-			return $shippingMethod->getColumnValues('shipping_method')[0];
-	}
-	
-	public function getPaymentMethod($customerId)
-	{
-		$paymentMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
-			->addFieldToFilter('customer_id', $customerId)
-			->addFieldToSelect('payment_method');
-			return $paymentMethod->getColumnValues('payment_method')[0];
+		return $customerEntityId->getColumnValues('entity_id')[0];
 	}
 	
 	public function getCustomerIdFromBid($bid)
@@ -41,7 +26,31 @@ class Accolade_Bttn_Helper_Data extends Mage_Core_Helper_Abstract {
 		$customerId = Mage::getModel('accolade_bttn/bttn')->getCollection()
 			->addFieldToFilter('button_id', $bid)
 			->addFieldToSelect('customer_id');
-			return $customerId->getColumnValues('customer_id')[0];
+		return $customerId->getColumnValues('customer_id')[0];
+	}
+	
+	public function getOrderMethod($customerId)
+	{
+		$orderMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
+			->addFieldToFilter('customer_id', $customerId)
+			->addFieldToSelect('order_method');
+		return $orderMethod->getColumnValues('order_method')[0];
+	}
+	
+	public function getShippingMethod($customerId)
+	{
+		$shippingMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
+			->addFieldToFilter('customer_id', $customerId)
+			->addFieldToSelect('shipping_method');
+		return $shippingMethod->getColumnValues('shipping_method')[0];
+	}
+	
+	public function getPaymentMethod($customerId)
+	{
+		$paymentMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
+			->addFieldToFilter('customer_id', $customerId)
+			->addFieldToSelect('payment_method');
+		return $paymentMethod->getColumnValues('payment_method')[0];
 	}
 	
 }

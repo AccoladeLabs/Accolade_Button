@@ -19,15 +19,22 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
 	
 	public function createAction()
 	{
-		if($_POST['button_id'] && $_POST['shipping_method'] && $_POST['payment_method'])
+		if($_POST['button_id'] && $_POST['shipping_method'] && $_POST['payment_method'] && $_POST['order_method'])
 		{
 			$customerId = Mage::app()->getRequest()->getParam('id');
-			$data = array('customer_id'=>$customerId,'button_id'=>$_POST['button_id'],'shipping_method'=>$_POST['shipping_method'],'payment_method'=>$_POST['payment_method']);
+			$data   = array('customer_id' => $customerId,
+							'button_id' => $_POST['button_id'],
+							'shipping_method' => $_POST['shipping_method'],
+							'payment_method' => $_POST['payment_method'],
+							'order_method' => $_POST['order_method']
+							);
 			$model = Mage::getModel('accolade_bttn/bttn')->setData($data);
+			
 			try {
 				$insertId = $model->save()->getId();
-				echo "Data successfully inserted. Insert ID: ".$insertId;
+				// Mage::getSingleton('core/session')->addSuccess('Bt.tn details successfully applied');
 			} catch (Exception $e){
+				Mage::getSingleton('core/session')->addError('Information missing!');
 				Mage::log($e->getMessage());   
 			}
 		}
@@ -37,6 +44,7 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
     public function saveAction()
     {
 		$entity_id = Mage::app()->getRequest()->getParam('id');
+		
 		if($_POST['button_id'])
 		{
 			$button_id = $_POST['button_id'];
@@ -49,6 +57,7 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
 				Mage::log($e->getMessage()); 
 			}
 		}
+		
 		if($_POST['shipping_method']){
 			$shipping_method = $_POST['shipping_method'];
 			$data = array('shipping_method' => $shipping_method);
@@ -57,9 +66,10 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
 			try {
 				$model->setId($entity_id)->save();
 			} catch (Exception $e){
-				Mage::log($e->getMessage()); 
+				Mage::getSingleton('core/session')->addError($quote->getPayment()->importData(array('method' => $paymentMethod)));
 			}
 		}
+		
 		if($_POST['payment_method']){
 			$payment_method = $_POST['payment_method'];
 			$data = array('payment_method' => $payment_method);
@@ -71,6 +81,20 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
 				Mage::log($e->getMessage()); 
 			}
 		}
+		
+		if($_POST['order_method']){
+			$order_method = $_POST['order_method'];
+			$data = array('order_method' => $order_method);
+			$model = Mage::getModel('accolade_bttn/bttn')->load($entity_id)->addData($data);
+			
+			try {
+				$model->setId($entity_id)->save();
+			} catch (Exception $e){
+				Mage::log($e->getMessage()); 
+			}
+		}
+		
+		Mage::getSingleton('core/session')->addSuccess('Bt.tn details successfully updated');
 		return $this->_redirectReferer();
 	}
 }
