@@ -1,0 +1,32 @@
+<div class="col-3 totals">
+<ol>
+	<h2><?php echo $this->__('Order Totals') ?></h2>
+	<li class="item">
+		<div class="fieldset">
+			<ul class="form-list">
+				<li>
+					<table class="data-table">
+						<col width="1" />
+						<col width="1" />
+						<thead>
+							<tr>
+								<th>Totals</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php $quote = Mage::getModel('sales/quote') ?>	
+							<?php Mage::getModel('accolade_bttn/bttn')->getTotals($quote, null) ?>
+							<?php $totals = $quote->getShippingAddress()->getData() ?></td>
+							<tr><td><?php echo $this->__('Subtotal') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['subtotal'], true, false) ?></td></tr>
+							<tr><td><?php echo $this->__('Tax') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['tax_amount'], true, false) ?></td></tr>
+							<tr><td><?php echo $this->__('Grand Total') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['grand_total'], true, false) ?></td></tr>
+							</td>
+						</tbody>
+					</table>
+				</li>
+			</ul>
+		</div>
+	</li>
+</ol>
+</div>

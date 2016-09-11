@@ -1,0 +1,20 @@
+<div class="page-title">
+	<h1><?php echo $this->__('My Bt.tn') ?></h1>
+</div>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<form action="<?php echo $this->getChildHtml('form.action') ?>" id="form" method="post" name="form">
+<div class="col2-set top">
+	<?php echo $this->getChildHtml('edit.bttn.settings') ?>
+	<?php echo $this->getChildHtml('edit.payment') ?>
+</div>
+<div class="col2-set middle">
+	<?php echo $this->getChildHtml('edit.shipping') ?>
+	<?php echo $this->getChildHtml('edit.ordertemplate') ?>
+</div>
+<div class="col3-set bottom">
+	<?php echo $this->getChildHtml('totals') ?>
+</div>
+<br/>
+<button type="submit" title="<?php echo $this->__('Save') ?>" class="button f-right" style="float: right;"><span><span><?php echo $this->__('Save') ?></span></span></button>
+</form>
+<br/><br/>

@@ -19,82 +19,100 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
 	
 	public function createAction()
 	{
-		if($_POST['button_id'] && $_POST['shipping_method'] && $_POST['payment_method'] && $_POST['order_method'])
-		{
-			$customerId = Mage::app()->getRequest()->getParam('id');
-			$data   = array('customer_id' => $customerId,
-							'button_id' => $_POST['button_id'],
-							'shipping_method' => $_POST['shipping_method'],
-							'payment_method' => $_POST['payment_method'],
-							'order_method' => $_POST['order_method']
-							);
-			$model = Mage::getModel('accolade_bttn/bttn')->setData($data);
-			
-			try {
-				$insertId = $model->save()->getId();
-				// Mage::getSingleton('core/session')->addSuccess('Bt.tn details successfully applied');
-			} catch (Exception $e){
-				Mage::getSingleton('core/session')->addError('Information missing!');
-				Mage::log($e->getMessage());   
+		$checkShippingAddress = Mage::getModel('accolade_bttn/bttn')->getCheckShippingAddress();
+		if ($_POST['button_id'] && $_POST['payment_method'] && $_POST['order_method']) {
+			if (strlen($_POST['button_id']) == 16) {
+				$customerId = Mage::app()->getRequest()->getParam('id');
+				$data       = array('customer_id' => Mage::getModel('accolade_bttn/bttn')->getCustomerId(),
+								'button_id' => $_POST['button_id'],
+								'payment_method' => $_POST['payment_method'],
+								'order_method' => $_POST['order_method']
+							   );
+				$model = Mage::getSingleton('accolade_bttn/bttn')->setData($data);
+				
+				try {
+					$model->save();
+				} catch (Exception $e){
+					Mage::getSingleton('core/session')->addError('Error');
+				}
 			}
+			else if (!$checkShippingAddress) {
+				Mage::getSingleton('core/session')->addError('Please add your address from the account settings!');
+			}
+			else {
+				Mage::getSingleton('core/session')->addError($this->__('Bt.tn device ID invalid!')); 
+			}
+		} else {
+			Mage::getSingleton('core/session')->addError('All required fields must be filled!');
 		}
 		return $this->_redirectReferer();
 	}
 	
     public function saveAction()
     {
-		$entity_id = Mage::app()->getRequest()->getParam('id');
+		$entityId = Mage::getSingleton('accolade_bttn/bttn')->getBttnEntityId();
 		
-		if($_POST['button_id'])
-		{
+		$error = 0;
+		if ($_POST['button_id']) {
 			$button_id = $_POST['button_id'];
-			$data = array('button_id' => $button_id);
-			$model = Mage::getModel('accolade_bttn/bttn')->load($entity_id)->addData($data);
-			
-			try {
-				$model->setId($entity_id)->save();
-			} catch (Exception $e){
-				Mage::log($e->getMessage()); 
+			if (strlen($button_id) == 16) {
+				$data = array('button_id' => $button_id);
+				$model = Mage::getModel('accolade_bttn/bttn')->load($entityId)->addData($data);
+				
+				try {
+					$model->setId($entityId)->save();
+				} catch (Exception $e){
+					$error = 1;
+					Mage::log($e->getMessage()); 
+				}
+			} else {
+				$error = 1;
+				Mage::getSingleton('core/session')->addError($this->__('Bt.tn device ID invalid!')); 
 			}
 		}
 		
-		if($_POST['shipping_method']){
+		if ($_POST['shipping_method']) {
 			$shipping_method = $_POST['shipping_method'];
 			$data = array('shipping_method' => $shipping_method);
-			$model = Mage::getModel('accolade_bttn/bttn')->load($entity_id)->addData($data);
+			$model = Mage::getSingleton('accolade_bttn/bttn')->load($entityId)->addData($data);
 			
 			try {
-				$model->setId($entity_id)->save();
+				$model->setId($entityId)->save();
 			} catch (Exception $e){
-				Mage::getSingleton('core/session')->addError($quote->getPayment()->importData(array('method' => $paymentMethod)));
+				$error = 1;
+				Mage::log($e->getMessage()); 
 			}
 		}
 		
-		if($_POST['payment_method']){
+		if ($_POST['payment_method']) {
 			$payment_method = $_POST['payment_method'];
 			$data = array('payment_method' => $payment_method);
-			$model = Mage::getModel('accolade_bttn/bttn')->load($entity_id)->addData($data);
+			$model = Mage::getSingleton('accolade_bttn/bttn')->load($entityId)->addData($data);
 			
 			try {
-				$model->setId($entity_id)->save();
+				$model->setId($entityId)->save();
 			} catch (Exception $e){
+				$error = 1;
 				Mage::log($e->getMessage()); 
 			}
 		}
 		
-		if($_POST['order_method']){
+		if ($_POST['order_method']) {
 			$order_method = $_POST['order_method'];
 			$data = array('order_method' => $order_method);
-			$model = Mage::getModel('accolade_bttn/bttn')->load($entity_id)->addData($data);
+			$model = Mage::getSingleton('accolade_bttn/bttn')->load($entityId)->addData($data);
 			
 			try {
-				$model->setId($entity_id)->save();
+				$model->setId($entityId)->save();
 			} catch (Exception $e){
+				$error = 1;
 				Mage::log($e->getMessage()); 
 			}
 		}
 		
-		Mage::getSingleton('core/session')->addSuccess('Bt.tn details successfully updated');
+		if ($error == 0) {
+			Mage::getSingleton('core/session')->addSuccess('Bt.tn settings successfully updated!');
+		}
 		return $this->_redirectReferer();
 	}
 }
