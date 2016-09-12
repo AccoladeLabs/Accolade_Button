@@ -11,8 +11,15 @@
 	</customer_account>
 	<accolade_bttn_customer_index>
 		<update handle="customer_account" />
-		<reference name="my.account.wrapper">
-			<block type="core/template" name="accolade_bttn_content" template="accolade_bttn.phtml" /> 
+		<reference name="content">
+			<block type="core/template" name="accolade_bttn_content" template="accolade/bttn/dashboard.phtml"> 
+				<block type="core/template" name="form.action" as="form.action" template="accolade/bttn/formaction.phtml"/>
+				<block type="core/template" name="edit.bttn.details" as="edit.bttn.settings" template="accolade/bttn/edit/bttn/settings.phtml"/>
+				<block type="core/template" name="edit.shipping" as="edit.shipping" template="accolade/bttn/edit/shipping.phtml"/>
+				<block type="core/template" name="edit.payment" as="edit.payment" template="accolade/bttn/edit/payment.phtml"/>
+				<block type="core/template" name="edit.ordertemplate" as="edit.ordertemplate" template="accolade/bttn/edit/ordertemplate.phtml"/>
+				<block type="core/template" name="totals" as="totals" template="accolade/bttn/totals.phtml"/>
+			</block>
 		</reference>
 	</accolade_bttn_customer_index>
 </layout>
