@@ -6,7 +6,7 @@
  * Time: 2:22 PM
  */
 
-class Accolade_Bttn_Model_Api extends Mage_Core_Model_Abstract
+class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 {
     private $apiUrl = "https://your.bt.tn/serves/";
 
