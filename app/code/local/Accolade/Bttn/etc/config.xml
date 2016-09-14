@@ -88,9 +88,27 @@
 	                            </config>
 	                        </children>
 	                    </system>
+						<accolade_bttn>
+							<children>
+								<bttn>
+									<title>Accolade - All</title>
+								</bttn>
+							</children>
+						</accolade_bttn>
 	                </children>
 	            </admin>
 	        </resources>
 	    </acl>
 	</adminhtml>
+	<admin>
+		<routers>
+			<adminhtml>
+				<args>
+					<modules>
+						<accoladebttn after="Mage_Adminhtml">Accolade_Bttn_Adminhtml</accoladebttn>
+					</modules>
+				</args>
+			</adminhtml>
+		</routers>
+	</admin>
 </config>

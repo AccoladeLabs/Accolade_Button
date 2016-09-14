@@ -20,4 +20,17 @@
             </admin>
         </resources>
     </acl>
+    <menu>
+        <accolade_bttn>
+            <title>Bt.tn</title>
+            <sort_order>41</sort_order>
+            <children>
+                <bttn translate="title" module="accolade_bttn">
+                    <title>Manage Associations</title>
+                    <sort_order>10</sort_order>
+                    <action>adminhtml/bttn</action>
+                </bttn>
+            </children>
+        </accolade_bttn>
+    </menu>
 </config>
