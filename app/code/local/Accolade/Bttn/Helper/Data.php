@@ -15,4 +15,11 @@ class Accolade_Bttn_Helper_Data extends Mage_Core_Helper_Abstract {
         }
         return $collection;
     }
+    /**
+     * Get config to determine whether or not to show the taxes
+     */
+    public function showTax()
+    {
+        return Mage::getSingleton('tax/config')->displayCartPricesInclTax(Mage::app()->getStore());
+    }
 }

@@ -20,7 +20,10 @@
 								<?php Mage::getModel('accolade_bttn/bttn')->getTotals($quote, null) ?>
 								<?php $totals = $quote->getShippingAddress()->getData() ?></td>
 								<tr><td><?php echo $this->__('Subtotal') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['subtotal'], true, false) ?></td></tr>
+								<?php if (Mage::helper('accolade_bttn')->showTax()): ?>
 								<tr><td><?php echo $this->__('Tax') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['tax_amount'], true, false) ?></td></tr>
+								<?php endif; ?>
+								<tr><td><?php echo $this->__('Shipping') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['shipping_amount'], true, false) ?></td></tr>
 								<tr><td><?php echo $this->__('Grand Total') ?></td><td align="right"><?php echo Mage::helper('core')->currency($totals['grand_total'], true, false) ?></td></tr>
 								</td>
 							</tbody>

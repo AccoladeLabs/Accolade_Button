@@ -277,6 +277,9 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         $address->setCountryId($this->getCountryCode())
             ->setPostcode($this->getPostcode())
             ->setCollectShippingrates(true);
+        if (!Mage::helper('accolade_bttn')->showTax()) {
+            $address->setGrandTotal($address->getGrandTotal() - $address->getData('tax_amount'));
+        }
         //# get shipping rates
         if ($variable == 'shipping') {
             $rates = $address->collectShippingRates()->getGroupedAllShippingRates();
