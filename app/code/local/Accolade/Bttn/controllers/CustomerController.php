@@ -51,68 +51,51 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
     public function saveAction()
     {
 		$entityId = Mage::getSingleton('accolade_bttn/bttn')->getBttnEntityId();
-		
+
+        $values = array(
+            "button_id" => array(
+                "test" => function($id) {
+                    return strlen($id) == 16;
+                },
+                "error_message" => $this->__('Invalid Bt.tn device ID!')
+            ),
+            "shipping_method" => true,
+            "payment_method" => true,
+            "order_method" = >true
+        );
 		$error = 0;
-		if ($_POST['button_id']) {
-			$button_id = $_POST['button_id'];
-			if (strlen($button_id) == 16) {
-				$data = array('button_id' => $button_id);
-				$model = Mage::getModel('accolade_bttn/bttn')->load($entityId)->addData($data);
-				
-				try {
-					$model->setId($entityId)->save();
-				} catch (Exception $e){
-					$error = 1;
-					Mage::log($e->getMessage()); 
-				}
-			} else {
-				$error = 1;
-				Mage::getSingleton('core/session')->addError($this->__('Bt.tn device ID invalid!')); 
-			}
-		}
-		
-		if ($_POST['shipping_method']) {
-			$shipping_method = $_POST['shipping_method'];
-			$data = array('shipping_method' => $shipping_method);
-			$model = Mage::getSingleton('accolade_bttn/bttn')->load($entityId)->addData($data);
-			
-			try {
-				$model->setId($entityId)->save();
-			} catch (Exception $e){
-				$error = 1;
-				Mage::log($e->getMessage()); 
-			}
-		}
-		
-		if ($_POST['payment_method']) {
-			$payment_method = $_POST['payment_method'];
-			$data = array('payment_method' => $payment_method);
-			$model = Mage::getSingleton('accolade_bttn/bttn')->load($entityId)->addData($data);
-			
-			try {
-				$model->setId($entityId)->save();
-			} catch (Exception $e){
-				$error = 1;
-				Mage::log($e->getMessage()); 
-			}
-		}
-		
-		if ($_POST['order_method']) {
-			$order_method = $_POST['order_method'];
-			$data = array('order_method' => $order_method);
-			$model = Mage::getSingleton('accolade_bttn/bttn')->load($entityId)->addData($data);
-			
-			try {
-				$model->setId($entityId)->save();
-			} catch (Exception $e){
-				$error = 1;
-				Mage::log($e->getMessage()); 
-			}
-		}
-		
-		if ($error == 0) {
-			Mage::getSingleton('core/session')->addSuccess('Bt.tn settings successfully updated!');
-		}
+        $data = array();
+        foreach ($values as $key => $validation) {
+            if (isset($_POST[$key])) {
+                $value = $_POST[$key];
+                $valid = false;
+                if (gettype($validation) == "boolean") {
+                    $valid = true;
+                } else {
+                    $valid = $validation->test($value);
+                }
+                if ($valid) {
+                    $data[$key] = $value;
+                } else {
+                    $error = 1;
+                    Mage::getSingleton('core/session')->addError($validation->error_message);
+                }
+            }
+        }
+
+        if (count($data)) {
+            $model = Mage::getModel('accolade_bttn/bttn')->load($entityId)->addData($data);
+            try {
+                $model->setId($entityId)->save();
+            } catch (Exception $e){
+                $error = 1;
+                Mage::log($e->getMessage());
+            }
+            if ($error == 0) {
+                Mage::getSingleton('core/session')->addSuccess('Bt.tn settings successfully updated!');
+            }
+        }
+
 		return $this->_redirectReferer();
 	}
 }
