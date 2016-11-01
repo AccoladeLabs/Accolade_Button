@@ -61,7 +61,7 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
             ),
             "shipping_method" => true,
             "payment_method" => true,
-            "order_method" = >true
+            "order_method" => true
         );
 		$error = 0;
         $data = array();
@@ -72,7 +72,7 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
                 if (gettype($validation) == "boolean") {
                     $valid = true;
                 } else {
-                    $valid = $validation->test($value);
+                    $valid = call_user_func($validation['test'], $value);
                 }
                 if ($valid) {
                     $data[$key] = $value;
