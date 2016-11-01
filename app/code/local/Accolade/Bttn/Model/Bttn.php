@@ -60,7 +60,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
 
     public function getBttnEntityId()
     {
-        $bttnEntityId = Mage::getModel('accolade_bttn/bttn')->getCollection()
+        $bttnEntityId = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToSelect('entity_id');
         $id = $bttnEntityId->getColumnValues('entity_id');
@@ -72,7 +72,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
 
     public function getBttnId()
     {
-        $bttnId = Mage::getModel('accolade_bttn/bttn')->getCollection()
+        $bttnId = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToSelect('button_id');
         $id = $bttnId->getColumnValues('button_id');
@@ -84,7 +84,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
 
     public function getCustomerIdFromBttnId($bttnId)
     {
-        $customerId = Mage::getModel('accolade_bttn/bttn')->getCollection()
+        $customerId = $this->getCollection()
             ->addFieldToFilter('button_id', $bttnId)
             ->addFieldToSelect('customer_id');
         $id = $customerId->getColumnValues('customer_id');
@@ -96,7 +96,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
 
     public function getShippingMethod()
     {
-        $shippingMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
+        $shippingMethod = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToSelect('shipping_method');
         $method = $shippingMethod->getColumnValues('shipping_method');
@@ -123,7 +123,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
 
     public function getOrderMethod()
     {
-        $orderMethod = Mage::getModel('accolade_bttn/bttn')->getCollection()
+        $orderMethod = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToSelect('order_method');
         $method = $orderMethod->getColumnValues('order_method');
