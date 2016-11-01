@@ -8,38 +8,38 @@
 
 class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 {
-    private $apiUrl = "https://your.bt.tn/serves/";
+    private $_apiUrl = "https://your.bt.tn/serves/";
 
-    private $version = "v1";
+    private $_version = "v1";
 
     /**
      * Retrieve the merchant name from configuration
      *
-     * @return accolade/bttn/merchant_name
+     * @return string accolade/bttn/merchant_name
      */
     public function getMerchant()
     {
-        return Mage::getConfig('accolade/bttn/merchant_name');
+        return Mage::getStoreConfig('accolade/bttn/merchant_name');
     }
 
     /**
      * Retrieve the API key from configuration
      *
-     * @return accolade/bttn/api_key
+     * @return string accolade/bttn/api_key
      */
     public function getApiKey()
     {
-        return Mage::getConfig('accolade/bttn/api_key');
+        return Mage::getStoreConfig('accolade/bttn/api_key');
     }
 
     /**
      * Build the API URL unique to the merchant
      *
-     * @return accolade/bttn/merchant_name
+     * @return string URL
      */
     public function getApiUrl()
     {
-        return $this->apiUrl . $this->getMerchant() . "/" . $this->version . "/";
+        return $this->_apiUrl . $this->getMerchant() . "/" . $this->_version . "/";
     }
 
     /**
@@ -51,12 +51,12 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
      * @param array $headers
      * @param string $callback
      *
-     * @return object $response
+     * @return object|boolean $response
      */
     protected function request( $endpoint = "", $method = "get", $data = array(), $headers = array())
     {
         $apiHeaders = array(
-            "X-Api-Key" => $this->getApiKey()
+            "X-Api-Key: " . $this->getApiKey()
         );
 
         if (count($headers)) {
@@ -65,40 +65,23 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
             $requestHeaders = $apiHeaders;
         }
 
-        $curlOptions = array(
-            CURLOPT_HTTPHEADER => $requestHeaders,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_URL => $this->getApiUrl() . $endpoint
-        );
-
-        switch ($method) {
-            case "delete":
-                array_push(
-                    $curlOptions,
-                    array(
-                        CURLOPT_CUSTOMREQUEST => "DELETE"
-                    )
-                );
-                break;
-            case "post":
-                array_push(
-                    $curlOptions,
-                    array(
-                        CURLOPT_POST => true,
-                        CURLOPT_POSTFIELDS => $data
-                    )
-                );
-                break;
+        $client = new Varien_Http_Client();
+        $client->setUri($this->getApiUrl() . $endpoint);
+        $client->setMethod(strtoupper($method));
+        $client->setConfig(array(
+            'strict' => false
+        ));
+        $client->setHeaders($requestHeaders);
+        $client->setRawData(json_encode($data), 'application/json');
+        try {
+            $response = $client->request();
+        } catch (Exception $e) {
+            Mage::log("Error on $endpoint request:", null, 'bttn-error.log', true);
+            Mage::log(print_r($e->getMessage(), true), null, 'bttn-error.log', true);
+            Mage::log(print_r($client->getLastRequest(), true), null, 'bttn-error.log', true);
+            return $e->getMessage();
         }
-
-        $ch = curl_init();
-
-        curl_setopt_array(
-            $ch,
-            $curlOptions
-        );
-
-        return curl_exec($ch);
+        return json_decode($response->getBody());
     }
 
     /**
@@ -109,10 +92,22 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     public function associateBttn($buttonId)
     {
         $data = array(
-            'code' => $buttonId
+            array(
+                'code' => $buttonId
+            )
          );
         $response = $this->request("associate", "post", $data);
-        Mage::log($response, null, "bttn.log");
+        if (is_array($response) && count($response) > 0) {
+            if (isset($response[0]->associd)) {
+                return array('association_id' => $response[0]->associd);
+            } else if (isset($response[0]->error)) {
+                if ($response[0]->error == "already_associated") {
+                    return new Exception("Bt.tn already associated");
+                }
+                return new Exception("Bt.tn association failed");
+            }
+        }
+        return new Exception("Bt.tn association failed");
     }
 
     /**
