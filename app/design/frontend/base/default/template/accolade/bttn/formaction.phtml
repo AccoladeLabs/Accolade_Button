@@ -1,7 +1,0 @@
-<?php $bttnEntityId = Mage::getSingleton('accolade_bttn/bttn')->getBttnEntityId() ?>
-<?php $customerId = Mage::getSingleton('accolade_bttn/bttn')->getCustomerId() ?>
-<?php if ($bttnEntityId): ?>
-	<?php echo $this->getUrl('*/*/save/') ?>
-<?php else: ?>
-	<?php echo $this->getUrl('*/*/create/') ?>
-<?php endif; ?>
