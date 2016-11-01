@@ -24,9 +24,9 @@
 									<?php $formattedPrice = Mage::helper('core')->currency($rate->getData()['price'],true,false) ?>
 									<?php $shippingMethod = Mage::getSingleton('accolade_bttn/bttn')->getShippingMethod() ?>
 									<?php if ($shippingMethod == $rate->getData()['code']): ?>
-										<input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" checked />&nbsp;&nbsp;<?php echo $methodTitle.'  '.$formattedPrice ?><br/><br/><br/>
+										<input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" checked required />&nbsp;&nbsp;<?php echo $methodTitle.'  '.$formattedPrice ?><br/><br/><br/>
 									<?php else: ?>
-										<input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" />&nbsp;&nbsp;<?php echo $methodTitle.'  '.$formattedPrice ?><br/><br/><br/>
+										<input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" required />&nbsp;&nbsp;<?php echo $methodTitle.'  '.$formattedPrice ?><br/><br/><br/>
 									<?php endif; ?>
 								<?php endforeach; ?>
 							<?php endforeach; ?>

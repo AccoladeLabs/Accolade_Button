@@ -19,11 +19,11 @@
 							<?php $orderMethod = Mage::getSingleton('accolade_bttn/bttn')->getOrderMethod() ?>
 							<?php if ($orderMethod == 'wishlist'): ?>
 								<?php echo str_repeat('&nbsp;', 5) ?>
-								<input class="radio" type="radio" name="order_method" value="wishlist" checked />
+								<input class="radio" type="radio" name="order_method" value="wishlist" checked required />
 								<?php echo str_repeat('&nbsp;', 12).$this->__('Order Wishlist products') ?>
 							<?php else: ?>
 								<?php echo str_repeat('&nbsp;', 5) ?>
-								<input class="radio" type="radio" name="order_method" value="wishlist" />
+								<input class="radio" type="radio" name="order_method" value="wishlist" required />
 								<?php echo str_repeat('&nbsp;', 12).$this->__('Order Wishlist products') ?>
 							<?php endif; ?>
 							</td>
@@ -47,9 +47,9 @@
 									<td class="a-center">
 									<?php $order_id = $_order->getRealOrderId() ?>
 									<?php if($orderMethod == $order_id): ?>
-										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" style="margin-top: 6px;" checked />
+										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" style="margin-top: 6px;" checked required />
 									<?php else: ?>
-										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" style="margin-top: 6px;" />
+										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" style="margin-top: 6px;" required />
 									<?php endif; ?>
 									</td>
 									<td><?php echo $_order->getRealOrderId() ?></td>

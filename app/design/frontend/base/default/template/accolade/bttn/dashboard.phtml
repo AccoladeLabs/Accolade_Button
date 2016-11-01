@@ -2,7 +2,7 @@
 	<h1><?php echo $this->__('My Bt.tn') ?></h1>
 </div>
 <?php echo $this->getMessagesBlock()->toHtml() ?>
-<form action="<?php echo $this->getChildHtml('form.action') ?>" id="form" method="post" name="form">
+<form action="<?php echo $this->getUrl('*/*/save/') ?>" id="form" method="post" name="form">
 <div class="col2-set top">
 	<?php echo $this->getChildHtml('edit.bttn.settings') ?>
 	<?php echo $this->getChildHtml('edit.payment') ?>

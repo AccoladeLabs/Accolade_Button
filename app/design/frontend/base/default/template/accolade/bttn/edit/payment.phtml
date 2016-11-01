@@ -14,9 +14,9 @@
 							<?php if (in_array($paymentCode, $allowedMethods)): ?>
 								<?php $paymentTitle = Mage::getStoreConfig('payment/'.$paymentCode.'/title') ?>
 								<?php if ($paymentMethod == $paymentCode): ?>
-									<input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" checked />&nbsp;&nbsp;<?php echo $paymentTitle ?><br/><br/>
+									<input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" checked required />&nbsp;&nbsp;<?php echo $paymentTitle ?><br/><br/>
 								<?php else: ?>
-									<input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" />&nbsp;&nbsp;<?php echo $paymentTitle ?><br/><br/>
+									<input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" required />&nbsp;&nbsp;<?php echo $paymentTitle ?><br/><br/>
 								<?php endif; ?>
 							<?php endif; ?>
 						<?php endforeach; ?>
