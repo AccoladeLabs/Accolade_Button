@@ -57,7 +57,7 @@
                 <use>standard</use>
                 <args>
                     <module>Accolade_Bttn</module>
-                    <frontName>accoladebttn</frontName>
+                    <frontName>accolade_bttn</frontName>
                 </args>
             </accolade_bttn>
         </routers>

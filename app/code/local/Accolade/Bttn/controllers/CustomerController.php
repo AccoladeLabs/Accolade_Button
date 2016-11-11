@@ -17,6 +17,17 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
         $this->renderLayout();
     }
 
+    public function editAction()
+    {
+        $this->loadLayout();
+        $this->renderLayout();
+    }
+
+    public function newAction()
+    {
+        $this->_forward('edit');
+    }
+
     public function saveAction()
     {
         $entityId = Mage::getSingleton('accolade_bttn/bttn')->getBttnEntityId();

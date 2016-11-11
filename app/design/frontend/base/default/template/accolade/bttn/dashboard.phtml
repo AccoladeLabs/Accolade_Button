@@ -1,20 +1,39 @@
-<div class="page-title">
-	<h1><?php echo $this->__('My Bt.tn') ?></h1>
+<?php
+$model = Mage::getModel('accolade_bttn/bttn');
+?>
+<div class="page-title title-buttons">
+    <h1><?php echo $this->__('My Bt.tn') ?></h1>
+    <button type="button" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Add New Button')) ?>" class="button" onclick="window.location='<?php echo $this->getUrl('*/*/new') ?>';"><span><span><?php echo $this->__('Add New Button') ?></span></span></button>
 </div>
 <?php echo $this->getMessagesBlock()->toHtml() ?>
-<form action="<?php echo $this->getUrl('*/*/save/') ?>" id="form" method="post" name="form">
-<div class="col2-set top">
-	<?php echo $this->getChildHtml('edit.bttn.settings') ?>
-	<?php echo $this->getChildHtml('edit.payment') ?>
+<div class="col1-set buttons-list">
+    <h2><?php echo $this->__('Associated Buttons') ?></h2>
+    <ul>
+        <?php $bttns = $model->getCustomerBttns();
+        if (count($bttns) > 0) :
+            foreach ($bttns as $bttn) : ?>
+                <li>
+                    <?php echo $bttn->getId() ?>
+                    <span class="">
+                        <a href="" title=""></a>
+                        <a href="" title=""></a>
+                    </span>
+                </li>
+            <?php endforeach;
+        else : ?>
+        <li>
+            <?php echo $this->quoteEscape($this->__('You haven\'t added any buttons yet.')); ?>
+        </li>
+        <?php endif; ?>
+    </ul>
 </div>
-<div class="col2-set middle">
-	<?php echo $this->getChildHtml('edit.shipping') ?>
-	<?php echo $this->getChildHtml('edit.ordertemplate') ?>
-</div>
-<div class="col3-set bottom">
-	<?php echo $this->getChildHtml('totals') ?>
-</div>
-<br/>
-<button type="submit" title="<?php echo $this->__('Save') ?>" class="button f-right" style="float: right;"><span><span><?php echo $this->__('Save') ?></span></span></button>
-</form>
-<br/><br/>
+<script type="text/javascript">
+//<![CDATA[
+    function deleteAddress(addressId) {
+        if(confirm('<?php echo Mage::helper('core')->jsQuoteEscape($this->__('Are you sure you want to delete this button?')) ?>')) {
+            window.location='<?php echo $this->getDeleteUrl() ?>id/'+addressId;
+        }
+        return false;
+    }
+//]]>
+</script>

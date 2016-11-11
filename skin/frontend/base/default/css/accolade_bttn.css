@@ -1,0 +1,11 @@
+.page-title.title-buttons button {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.page-title.title-buttons h1 {
+    border-bottom: 0;
+}
+.page-title.title-buttons {
+    position: relative;
+}
