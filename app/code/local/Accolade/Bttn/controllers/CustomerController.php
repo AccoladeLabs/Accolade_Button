@@ -19,17 +19,47 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
 
     public function editAction()
     {
-        $this->loadLayout();
-        $this->renderLayout();
+        $error = 0;
+        $params = $this->getRequest()->getParams();
+        // Make sure the paramter we want is set
+        if (isset($params['id'])) {
+            // Make sure we can get the bttn
+            if ($bttn = Mage::getModel('accolade_bttn/bttn')->getBttnById($params['id'])) {
+                // Make sure the button belongs to the customer trying to access it
+                if ($customer = Mage::getSingleton('customer/session')) {
+                    if ($customer->getId() == $bttn->getCustomerId()) {
+                        $customer->setBttn($bttn);
+                    } else {
+                        $error = 1;
+                        Mage::getSingleton('core/session')->addError($this->__('That bttn is not associated with your account.'));
+                    }
+                } else {
+                    $error = 1;
+                    Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve session data.'));
+                }
+            } else {
+                $error = 1;
+                Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve bttn data.'));
+            }
+        }
+
+        if ($error == 1) {
+            $this->_forward('index');
+        } else {
+            $this->loadLayout();
+            $this->renderLayout();
+        }
     }
 
     public function newAction()
     {
+        Mage::getSingleton('customer/session')->setBttn(Mage::getModel('accolade_bttn/bttn'));
         $this->_forward('edit');
     }
 
     public function saveAction()
     {
+        $error = 0;
         $entityId = Mage::getSingleton('accolade_bttn/bttn')->getBttnEntityId();
         $checkShippingAddress = Mage::getModel('accolade_bttn/bttn')->getCheckShippingAddress();
         if (!$checkShippingAddress) {
@@ -42,7 +72,6 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
         } else {
             $model = Mage::getSingleton('accolade_bttn/bttn');
         }
-        Mage::log('Old ID: ' . $model->getData('button_id'), null, 'bttn.log');
         if (empty($model)) {
             Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve Bt.tn data'));
         } else {
@@ -76,7 +105,6 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
                     "error_message" => $this->__('Invalid order method')
                 ),
             );
-            $error = 0;
             $data = array();
             foreach ($values as $key => $validation) {
                 if (isset($_POST[$key])) {
@@ -134,6 +162,7 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
                 }
             }
         }
+        Mage::getSingleton('customer/session')->setBttn(Mage::getModel('accolade_bttn/bttn'));
         return $this->_redirectReferer();
     }
 }

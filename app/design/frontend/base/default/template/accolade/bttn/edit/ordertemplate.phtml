@@ -1,3 +1,4 @@
+<?php $bttn= Mage::getSingleton('customer/session')->getBttn() ?>
 <div class="col-2 order-template">
 <ol>
 	<h2><?php echo $this->__('Order Template') ?></h2>
@@ -16,7 +17,7 @@
 						</thead>
 						<tbody>
 							<td>
-							<?php $orderMethod = Mage::getSingleton('accolade_bttn/bttn')->getOrderMethod() ?>
+							<?php $orderMethod = $bttn->getOrderMethod() ?>
 							<?php if ($orderMethod == 'wishlist'): ?>
 								<?php echo str_repeat('&nbsp;', 5) ?>
 								<input class="radio" type="radio" name="order_method" value="wishlist" checked required />
@@ -30,7 +31,7 @@
 						</tbody>
 					</table>
 					<div class="order_scrollable" style="max-height:500px;overflow:auto;">
-					<?php $_orders = Mage::getModel('sales/order')->getCollection()->addFieldToFilter('customer_id', Mage::getSingleton('accolade_bttn/bttn')->getCustomerId())->addFieldToSelect('*')->addOrder('entity_id', 'desc') ?>
+					<?php $_orders = Mage::getModel('sales/order')->getCollection()->addFieldToFilter('customer_id', $bttn->getCustomerId())->addFieldToSelect('*')->addOrder('entity_id', 'desc') ?>
 					<?php if ($_orders->getSize()): ?>
 						<table class="data-table" id="my-orders-table" style="margin-top: 0px;">
 							<col width="1" />

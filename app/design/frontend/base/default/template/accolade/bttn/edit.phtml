@@ -1,6 +1,7 @@
 <div class="page-title">
 	<h1><?php echo $this->__('My Bt.tn') ?></h1>
 </div>
+<?php $bttn = Mage::getSingleton('customer/session')->getBttn() ?>
 <?php echo $this->getMessagesBlock()->toHtml() ?>
 <form action="<?php echo $this->getUrl('*/*/save/') ?>" id="form" method="post" name="form">
     <div class="col2-set top">

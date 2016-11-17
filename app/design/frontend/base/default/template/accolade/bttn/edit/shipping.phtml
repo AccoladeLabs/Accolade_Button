@@ -1,3 +1,5 @@
+<?php $bttn= Mage::getSingleton('customer/session')->getBttn() ?>
+
 <div class="col-1 shipping-method" style="padding-left: 20px">
 	<ol>
 	<h2><?php echo $this->__('Shipping Method') ?></h2>
@@ -6,12 +8,12 @@
 				<ul class="form-list">
 					<li>
 						<label for="button_id" class="required"><?php echo $this->__('Choose default shipping method') ?><em>*</em></label><br/>
-						<?php $checkShippingAddress = Mage::getModel('accolade_bttn/bttn')->getCheckShippingAddress() ?>
-						<?php $orderMethod = Mage::getModel('accolade_bttn/bttn')->getOrderMethod() ?>
-						<?php $isValid = Mage::getModel('accolade_bttn/bttn')->getCheckTemplate() ?>
+						<?php $checkShippingAddress = $bttn->getCheckShippingAddress() ?>
+						<?php $orderMethod = $bttn->getOrderMethod() ?>
+						<?php $isValid = $bttn->getCheckTemplate() ?>
 						<?php if ($checkShippingAddress && $orderMethod != '' && $isValid == 1): ?>
-							<?php $quote = Mage::getModel('sales/quote') ?>	
-							<?php $rates = Mage::getModel('accolade_bttn/bttn')->getTotals($quote, 'shipping') ?>
+							<?php $quote = Mage::getModel('sales/quote') ?>
+							<?php $rates = $bttn->getTotals($quote, 'shipping') ?>
 							<?php $carrierArr = array() ?>
 							<?php foreach ($rates as $carrier): ?>
 								<?php foreach ($carrier as $rate): ?>
@@ -22,7 +24,7 @@
 									<?php endif; ?>
 									<?php $methodTitle = $rate->getData()['method_title'] ?>
 									<?php $formattedPrice = Mage::helper('core')->currency($rate->getData()['price'],true,false) ?>
-									<?php $shippingMethod = Mage::getSingleton('accolade_bttn/bttn')->getShippingMethod() ?>
+									<?php $shippingMethod = $bttn->getShippingMethod() ?>
 									<?php if ($shippingMethod == $rate->getData()['code']): ?>
 										<input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" checked required />&nbsp;&nbsp;<?php echo $methodTitle.'  '.$formattedPrice ?><br/><br/><br/>
 									<?php else: ?>

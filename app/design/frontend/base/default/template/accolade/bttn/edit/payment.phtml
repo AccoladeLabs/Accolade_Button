@@ -1,3 +1,4 @@
+<?php $bttn= Mage::getSingleton('customer/session')->getBttn() ?>
 <div class="col-1 payment-method" style="padding-left: 20px">
 	<ol>
 	<h2><?php echo $this->__('Payment Method') ?></h2>
@@ -9,7 +10,7 @@
 						<br/><br/><br/>
 						<?php $allowedMethods = explode(',', Mage::getStoreConfig('accolade/allowed_payment_methods/payment_methods')) ?>
 						<?php $payments = Mage::getSingleton('payment/config')->getActiveMethods() ?>
-						<?php $paymentMethod = Mage::getSingleton('accolade_bttn/bttn')->getPaymentMethod() ?>
+						<?php $paymentMethod = $bttn->getPaymentMethod() ?>
 						<?php foreach ($payments as $paymentCode=>$paymentModel): ?>
 							<?php if (in_array($paymentCode, $allowedMethods)): ?>
 								<?php $paymentTitle = Mage::getStoreConfig('payment/'.$paymentCode.'/title') ?>

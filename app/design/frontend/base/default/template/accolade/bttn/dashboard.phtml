@@ -13,10 +13,12 @@ $model = Mage::getModel('accolade_bttn/bttn');
         if (count($bttns) > 0) :
             foreach ($bttns as $bttn) : ?>
                 <li>
-                    <?php echo $bttn->getId() ?>
-                    <span class="">
-                        <a href="" title=""></a>
-                        <a href="" title=""></a>
+                    <span class="bttn-id">
+                        <?php echo $bttn->getButtonId() ?>
+                    </span>
+                    <span class="bttn-links">
+                        <a href="<?php echo $bttn->getEditUrl() ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__("Edit")) ?>"><?php echo $this->__("Edit") ?></a> |
+                        <a href="<?php echo $bttn->getDeleteUrl() ?>" title="<?php echo Mage::helper('core')->quoteEscape($this->__("Delete")) ?>" class="button-delete"><?php echo $this->__("Delete") ?></a>
                     </span>
                 </li>
             <?php endforeach;

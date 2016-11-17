@@ -81,14 +81,15 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
-    public function getBttnId()
+    public function getBttnById($id)
     {
-        $bttnId = $this->getCollection()
-            ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToSelect('button_id');
-        $id = $bttnId->getColumnValues('button_id');
-        if (count($id)) {
-            return $id[0];
+        $bttns = $this->getCollection()
+            ->addFieldToFilter('button_id', $id)
+            ->addFieldToSelect('entity_id');
+        $bttn = $bttns->getFirstItem();
+        if ($bttn) {
+            Mage::log($bttn->getEntityId(), null, 'bttn-id.log', true);
+            return $this->load($bttn->getEntityId());
         }
         return false;
     }
@@ -105,6 +106,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
+/*
     public function getShippingMethod()
     {
         $shippingMethod = $this->getCollection()
@@ -143,7 +145,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         }
         return false;
     }
-
+*/
     public function getShippingTitleByCode()
     {
         $shippingTitle = '';
@@ -298,6 +300,10 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         } else {
             return $quote;
         }
+    }
+
+    public function getEditUrl() {
+        return Mage::getUrl("*/*/edit/id/" . $this->getButtonId());
     }
 
 }
