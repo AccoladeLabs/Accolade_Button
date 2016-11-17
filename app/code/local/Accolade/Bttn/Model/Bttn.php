@@ -74,7 +74,8 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
     {
         $bttns = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToSelect('button_id');
+            ->addFieldToSelect('button_id')
+            ->toArray();
         if (count($bttns)) {
             return $bttns;
         }
