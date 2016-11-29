@@ -10,8 +10,8 @@ $model = Mage::getModel('accolade_bttn/bttn');
     <h2><?php echo $this->__('Associated Buttons') ?></h2>
     <ul>
         <?php $bttnsCollection = $model->getCustomerBttns();
-        if ($bttnsCollection['totalRecords'] > 0) :
-            foreach ($bttnsCollection['items'] as $bttn) : ?>
+        if ($bttnsCollection) :
+            foreach ($bttnsCollection as $bttn) : ?>
                 <li>
                     <span class="bttn-id">
                         <?php echo $bttn->getButtonId() ?>

@@ -88,6 +88,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
      * Associate a button with the merchant
      *
      * @param string $buttonId
+     * @return array|exception
      */
     public function associateBttn($buttonId)
     {
@@ -129,10 +130,22 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     public function releaseBttn($associationId)
     {
         $data = array(
-            'associd' => $associationId
+            array(
+                'associd' => $associationId
+            )
         );
         $response = $this->request("release", "post", $data);
-        Mage::log($response, null, "bttn.log");
+        if (is_array($response) && count($response) > 0) {
+            if (isset($response[0]->associd)) {
+                return array('association_id' => $response[0]->associd);
+            } else if (isset($response[0]->error)) {
+                if ($response[0]->error == "does_not_exist") {
+                    return new Exception("Bt.tn not associated");
+                }
+                return new Exception("Bt.tn release failed");
+            }
+        }
+        return new Exception("Bt.tn release failed");
     }
 
     /**

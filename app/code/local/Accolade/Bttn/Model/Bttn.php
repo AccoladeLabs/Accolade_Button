@@ -74,22 +74,44 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
     {
         $bttns = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToSelect('button_id')
-            ->toArray();
-        if (count($bttns)) {
+            ->addFieldToSelect('button_id');
+        if ($bttns->getSize()) {
             return $bttns;
         }
         return false;
     }
 
+    /**
+     * @param $customer
+     * @param $bttnId
+     * @return int error code
+     */
+    public function setCustomerBttn($customer, $bttnId)
+    {
+        // Make sure we can get the bttn
+        if ($bttn = $this->getBttnById($bttnId)) {
+            // Make sure the button belongs to the customer trying to access it
+            if ($customer) {
+                $customer->setBttn($bttn);
+                return 0;
+            } else {
+                Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve session data.'));
+                return 1;
+            }
+        } else {
+            Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve bttn data.'));
+            return 1;
+        }
+    }
+
     public function getBttnById($id)
     {
         $bttns = $this->getCollection()
+            ->addFieldToFilter('customer_id', $this->getCustomerId())
             ->addFieldToFilter('button_id', $id)
             ->addFieldToSelect('entity_id');
         $bttn = $bttns->getFirstItem();
         if ($bttn) {
-            Mage::log($bttn->getEntityId(), null, 'bttn-id.log', true);
             return $this->load($bttn->getEntityId());
         }
         return false;
@@ -107,46 +129,6 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
-/*
-    public function getShippingMethod()
-    {
-        $shippingMethod = $this->getCollection()
-            ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToSelect('shipping_method');
-        $method = $shippingMethod->getColumnValues('shipping_method');
-        if (count($method)) {
-            return $method[0];
-        }
-        return false;
-    }
-
-    public function getPaymentMethod()
-    {
-        $paymentMethod = $this->getCollection()
-            ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToSelect('payment_method');
-        if (!$paymentMethod) {
-            return false;
-        }
-        $method = $paymentMethod->getColumnValues('payment_method');
-        if (count($method)) {
-            return $method[0];
-        }
-        return false;
-    }
-
-    public function getOrderMethod()
-    {
-        $orderMethod = $this->getCollection()
-            ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToSelect('order_method');
-        $method = $orderMethod->getColumnValues('order_method');
-        if (count($method)) {
-            return $method[0];
-        }
-        return false;
-    }
-*/
     public function getShippingTitleByCode()
     {
         $shippingTitle = '';
@@ -307,4 +289,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return Mage::getUrl("*/*/edit/id/" . $this->getButtonId());
     }
 
+    public function getDeleteUrl() {
+        return Mage::getUrl("*/*/delete/id/" . $this->getButtonId());
+    }
 }
