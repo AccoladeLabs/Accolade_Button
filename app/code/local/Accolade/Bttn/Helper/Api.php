@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Billy
- * Date: 8/25/2016
- * Time: 2:22 PM
- */
 
 class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 {
@@ -94,7 +88,33 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     {
         $data = array(
             array(
-                'code' => $buttonId
+                'code' => $buttonId,
+                'data' => array(
+                    'pressed' => array(
+                        'http' => array(
+                            'url'       => Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB),
+                            'method'    => 'post',
+                            'headers'   => array(
+                                'X-Api-Key' => $this->getApiKey()
+                            ),
+                            'json'      => array(
+                                'type' => 'short'
+                            )
+                        )
+                    ),
+                    'pressed-long' => array(
+                        'http' => array(
+                            'url'       => Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB),
+                            'method'    => 'post',
+                            'headers'   => array(
+                                'X-Api-Key' => $this->getApiKey()
+                            ),
+                            'json'      => array(
+                                'type' => 'long'
+                            )
+                        )
+                    )
+                )
             )
          );
         $response = $this->request("associate", "post", $data);
