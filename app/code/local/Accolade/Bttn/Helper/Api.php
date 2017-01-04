@@ -134,7 +134,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         if (is_array($response) && count($response) > 0) {
             if (isset($response[0]->associd)) {
                 // The association was successful, set the button data and return the association_id
-                $dataResponse = $this->setBttnData($response[0]->associd, $this->_getCallbackData);
+                $dataResponse = $this->setBttnData($response[0]->associd, $this->_getCallbackData());
                 return array('association_id' => $response[0]->associd);
             } else if (isset($response[0]->error)) {
                 if ($response[0]->error == "already_associated") {
