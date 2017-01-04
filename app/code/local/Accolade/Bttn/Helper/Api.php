@@ -2,9 +2,36 @@
 
 class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 {
-    private $_apiUrl = "https://your.bt.tn/serves/";
+    protected $_apiUrl = "https://your.bt.tn/serves/";
 
-    private $_version = "v1";
+    protected $_version = "v1";
+
+    protected $_callbackData = array(
+        'pressed' => array(
+            'http' => array(
+                'url'       => $this->getCallbackUrl(),
+                'method'    => 'post',
+                'headers'   => array(
+                    'X-Api-Key' => $this->getApiKey()
+                ),
+                'json'      => array(
+                    'type' => 'short'
+                )
+            )
+        ),
+        'pressed-long' => array(
+            'http' => array(
+                'url'       => $this->getCallbackUrl(),
+                'method'    => 'post',
+                'headers'   => array(
+                    'X-Api-Key' => $this->getApiKey()
+                ),
+                'json'      => array(
+                    'type' => 'long'
+                )
+            )
+        )
+    );
 
     /**
      * Retrieve the merchant name from configuration
@@ -36,6 +63,11 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         return $this->_apiUrl . $this->getMerchant() . "/" . $this->_version . "/";
     }
 
+    public function getCallbackUrl()
+    {
+        return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . "/accolade_bttn/api/callback";
+    }
+
     /**
      * Send a request to the API
      *
@@ -47,7 +79,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return object|boolean $response
      */
-    protected function request( $endpoint = "", $method = "get", $data = array(), $headers = array())
+    protected function request($endpoint = "", $method = "get", $data = array(), $headers = array())
     {
         $apiHeaders = array(
             "X-Api-Key: " . $this->getApiKey()
@@ -88,38 +120,14 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     {
         $data = array(
             array(
-                'code' => $buttonId,
-                'data' => array(
-                    'pressed' => array(
-                        'http' => array(
-                            'url'       => Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB),
-                            'method'    => 'post',
-                            'headers'   => array(
-                                'X-Api-Key' => $this->getApiKey()
-                            ),
-                            'json'      => array(
-                                'type' => 'short'
-                            )
-                        )
-                    ),
-                    'pressed-long' => array(
-                        'http' => array(
-                            'url'       => Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB),
-                            'method'    => 'post',
-                            'headers'   => array(
-                                'X-Api-Key' => $this->getApiKey()
-                            ),
-                            'json'      => array(
-                                'type' => 'long'
-                            )
-                        )
-                    )
-                )
+                'code' => $buttonId
             )
-         );
+        );
         $response = $this->request("associate", "post", $data);
         if (is_array($response) && count($response) > 0) {
             if (isset($response[0]->associd)) {
+                // The association was successful, set the button data and return the association_id
+                $dataResponse = $this->setBttnData($response[0]->associd, $this->_callbackData);
                 return array('association_id' => $response[0]->associd);
             } else if (isset($response[0]->error)) {
                 if ($response[0]->error == "already_associated") {
@@ -204,5 +212,31 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         );
         $response = $this->request("data", "post", $requestData);
         Mage::log($response, null, "bttn.log");
+        return $response;
+    }
+
+    /**
+     * Post result back to bt.tn for button light feedback
+     *
+     * @param string $event
+     * @param bool $success
+     */
+    public function sendResult($event, $success = false)
+    {
+        if ($success) {
+            $result = "positive";
+        } else {
+            $result = "negative";
+        }
+        $response = $this->request(
+            'callback/' . $event, 
+            'POST', 
+            array(
+                array(
+                    'result' => $result
+                )
+            )
+        );
+        return $reponse;
     }
 }
