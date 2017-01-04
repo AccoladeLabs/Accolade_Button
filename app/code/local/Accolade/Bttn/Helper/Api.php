@@ -72,7 +72,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 
     public function getCallbackUrl()
     {
-        return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . "/accolade_bttn/api/callback";
+        return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . "accolade_bttn/api/callback";
     }
 
     /**
@@ -105,7 +105,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
             'strict' => false
         ));
         $client->setHeaders($requestHeaders);
-        $client->setRawData(json_encode($data), 'application/json');
+        $client->setRawData(json_encode(array($data)), 'application/json');
         try {
             $response = $client->request();
         } catch (Exception $e) {
@@ -126,9 +126,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     public function associateBttn($buttonId)
     {
         $data = array(
-            array(
-                'code' => $buttonId
-            )
+            'code' => $buttonId
         );
         $response = $this->request("associate", "post", $data);
         if (is_array($response) && count($response) > 0) {
@@ -165,9 +163,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     public function releaseBttn($associationId)
     {
         $data = array(
-            array(
-                'associd' => $associationId
-            )
+            'associd' => $associationId
         );
         $response = $this->request("release", "post", $data);
         if (is_array($response) && count($response) > 0) {
