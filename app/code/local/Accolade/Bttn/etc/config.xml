@@ -9,7 +9,7 @@
         <models>
             <accolade_bttn>
                 <class>Accolade_Bttn_Model</class>
-				<resourceModel>accolade_bttn_resource</resourceModel>
+                <resourceModel>accolade_bttn_resource</resourceModel>
             </accolade_bttn>
             <accolade_bttn_resource>
                 <class>Accolade_Bttn_Model_Resource</class>
@@ -29,27 +29,27 @@
             <accolade_bttn>
                 <class>Accolade_Bttn_Block</class>
             </accolade_bttn>
-		</blocks>
-		<resources>
-			<accoladebttn_setup>
-				<setup>
-					<module>Accolade_Bttn</module>
-				</setup>
-				<connection>
-					<use>core_setup</use>
-				</connection>
-			</accoladebttn_setup>
-			<accoladebttn_write>
-				<connection>
-					<use>core_write</use>
-				</connection>
-			</accoladebttn_write>
-			<accoladebttn_read>
-				<connection>
-					<use>core_read</use>
-				</connection>
-			</accoladebttn_read>
-		</resources>
+        </blocks>
+        <resources>
+            <accoladebttn_setup>
+                <setup>
+                    <module>Accolade_Bttn</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </accoladebttn_setup>
+            <accoladebttn_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </accoladebttn_write>
+            <accoladebttn_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </accoladebttn_read>
+        </resources>
     </global>
     <frontend>
         <routers>
@@ -61,54 +61,54 @@
                 </args>
             </accolade_bttn>
         </routers>
-		<layout>
-			<updates>
-				<accolade_bttn module="Accolade_Bttn">
-					<file>accolade_bttn.xml</file> <!-- Our layout file name-->
-				</accolade_bttn>
-			</updates>
-		</layout>
+        <layout>
+            <updates>
+                <accolade_bttn module="Accolade_Bttn">
+                    <file>accolade_bttn.xml</file> <!-- Our layout file name-->
+                </accolade_bttn>
+            </updates>
+        </layout>
     </frontend>
-	<adminhtml>
-	    <acl>
-	        <resources>
-	            <all>
-	                <title>Allow Everything</title>
-	            </all>
-	            <admin>
-	                <children>
-	                    <system>
-	                        <children>
-	                            <config>
-	                                <children>
-	                                    <accolade>
-	                                        <title>Accolade - All</title>
-	                                    </accolade>
-	                                </children>
-	                            </config>
-	                        </children>
-	                    </system>
-						<accolade_bttn>
-							<children>
-								<bttn>
-									<title>Accolade - All</title>
-								</bttn>
-							</children>
-						</accolade_bttn>
-	                </children>
-	            </admin>
-	        </resources>
-	    </acl>
-	</adminhtml>
-	<admin>
-		<routers>
-			<adminhtml>
-				<args>
-					<modules>
-						<accoladebttn after="Mage_Adminhtml">Accolade_Bttn_Adminhtml</accoladebttn>
-					</modules>
-				</args>
-			</adminhtml>
-		</routers>
-	</admin>
+    <adminhtml>
+        <acl>
+            <resources>
+                <all>
+                    <title>Allow Everything</title>
+                </all>
+                <admin>
+                    <children>
+                        <system>
+                            <children>
+                                <config>
+                                    <children>
+                                        <accolade>
+                                            <title>Accolade - All</title>
+                                        </accolade>
+                                    </children>
+                                </config>
+                            </children>
+                        </system>
+                        <accolade_bttn>
+                            <children>
+                                <bttn>
+                                    <title>Accolade - All</title>
+                                </bttn>
+                            </children>
+                        </accolade_bttn>
+                    </children>
+                </admin>
+            </resources>
+        </acl>
+    </adminhtml>
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <accoladebttn after="Mage_Adminhtml">Accolade_Bttn_Adminhtml</accoladebttn>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
 </config>
