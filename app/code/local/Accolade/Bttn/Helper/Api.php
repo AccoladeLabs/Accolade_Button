@@ -6,32 +6,39 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 
     protected $_version = "v1";
 
-    protected $_callbackData = array(
-        'pressed' => array(
-            'http' => array(
-                'url'       => $this->getCallbackUrl(),
-                'method'    => 'post',
-                'headers'   => array(
-                    'X-Api-Key' => $this->getApiKey()
-                ),
-                'json'      => array(
-                    'type' => 'short'
+    /**
+     * Retrieve the callback data necessary for button presses to work
+     *
+     * @return array
+     */
+    protected function _getCallbackData() {
+        return array(
+            'pressed' => array(
+                'http' => array(
+                    'url'       => $this->getCallbackUrl(),
+                    'method'    => 'post',
+                    'headers'   => array(
+                        'X-Api-Key' => $this->getApiKey()
+                    ),
+                    'json'      => array(
+                        'type' => 'short'
+                    )
+                )
+            ),
+            'pressed-long' => array(
+                'http' => array(
+                    'url'       => $this->getCallbackUrl(),
+                    'method'    => 'post',
+                    'headers'   => array(
+                        'X-Api-Key' => $this->getApiKey()
+                    ),
+                    'json'      => array(
+                        'type' => 'long'
+                    )
                 )
             )
-        ),
-        'pressed-long' => array(
-            'http' => array(
-                'url'       => $this->getCallbackUrl(),
-                'method'    => 'post',
-                'headers'   => array(
-                    'X-Api-Key' => $this->getApiKey()
-                ),
-                'json'      => array(
-                    'type' => 'long'
-                )
-            )
-        )
-    );
+        );
+    }
 
     /**
      * Retrieve the merchant name from configuration
@@ -127,7 +134,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         if (is_array($response) && count($response) > 0) {
             if (isset($response[0]->associd)) {
                 // The association was successful, set the button data and return the association_id
-                $dataResponse = $this->setBttnData($response[0]->associd, $this->_callbackData);
+                $dataResponse = $this->setBttnData($response[0]->associd, $this->_getCallbackData);
                 return array('association_id' => $response[0]->associd);
             } else if (isset($response[0]->error)) {
                 if ($response[0]->error == "already_associated") {
