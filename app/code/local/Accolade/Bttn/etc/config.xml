@@ -15,8 +15,11 @@
                 <class>Accolade_Bttn_Model_Resource</class>
                 <entities>
                     <bttn>
-                        <table>accolade_bttn</table>
+                        <table>accolade_bttn_associations</table>
                     </bttn>
+                    <key>
+                        <table>accolade_bttn_keys</table>
+                    </key>
                 </entities>
             </accolade_bttn_resource>
         </models>
@@ -111,4 +114,16 @@
             </adminhtml>
         </routers>
     </admin>
+    <crontab>
+        <jobs>
+            <check_bttn_api_keys>
+                <schedule>
+                    <cron_expr>0 0 1 * *</cron_expr>
+                </schedule>
+                <run>
+                    <model>accolade_bttn/key::checkAllKeys</model>
+                </run>
+            </check_bttn_api_keys>
+        </jobs>
+    </crontab>
 </config>

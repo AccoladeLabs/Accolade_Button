@@ -11,7 +11,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return array
      */
-    protected function _getCallbackData() {
+    protected function _getCallbackData($button_id, $association_id) {
         return array(
             'pressed' => array(
                 'http' => array(
@@ -21,6 +21,8 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
                         'X-Api-Key' => $this->getApiKey()
                     ),
                     'json'      => array(
+                        'association' => $association_id,
+                        'button' => $button_id,
                         'type' => 'short'
                     )
                 )
@@ -33,6 +35,8 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
                         'X-Api-Key' => $this->getApiKey()
                     ),
                     'json'      => array(
+                        'association' => $association_id,
+                        'button' => $button_id,
                         'type' => 'long'
                     )
                 )
@@ -72,7 +76,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
 
     public function getCallbackUrl()
     {
-        return Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB) . "accolade_bttn/api/callback";
+        return Mage::getUrl("accolade_bttn/api/callback");
     }
 
     /**
@@ -86,10 +90,10 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
      *
      * @return object|boolean $response
      */
-    protected function request($endpoint = "", $method = "get", $data = array(), $headers = array())
+    protected function request($endpoint = "", $scope = 'read', $method = "get", $data = array(), $headers = array())
     {
         $apiHeaders = array(
-            "X-Api-Key: " . $this->getApiKey()
+            "X-Api-Key: " . $this->getApiKey($scope)
         );
 
         if (count($headers)) {
@@ -128,7 +132,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         $data = array(
             'code' => $buttonId
         );
-        $response = $this->request("associate", "post", $data);
+        $response = $this->request("associate", 'associate', "post", $data);
         if (is_array($response) && count($response) > 0) {
             if (isset($response[0]->associd)) {
                 // The association was successful, set the button data and return the association_id
@@ -151,7 +155,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
      */
     public function getAssociations()
     {
-        $response = $this->request("associate");
+        $response = $this->request("associate", 'associate');
         Mage::log($response, null, "bttn.log");
     }
 
@@ -165,7 +169,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         $data = array(
             'associd' => $associationId
         );
-        $response = $this->request("release", "post", $data);
+        $response = $this->request("release", 'associate', "post", $data);
         if (is_array($response) && count($response) > 0) {
             if (isset($response[0]->associd)) {
                 return array('association_id' => $response[0]->associd);
@@ -182,18 +186,20 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
     /**
      * Clear the data associated with a button
      *
-     * @param $associationId
+     * @param string $associationId The association ID for the button
+     *
+     * @return null
      */
     public function clearBttnData($associationId)
     {
-        $response = $this->request("data/" . $associationId, "delete");
+        $response = $this->request("data/" . $associationId, 'write', "delete");
         Mage::log($response, null, "bttn.log");
     }
 
     /**
      * Get the data associated with a button
      *
-     * @param $associationId
+     * @param string $associationId The association ID for the button
      */
     public function getBttnData($associationId)
     {
@@ -213,33 +219,113 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
             'associd' => $associationId,
             'data' => $data
         );
-        $response = $this->request("data", "post", $requestData);
+        $response = $this->request("data", 'write', "post", $requestData);
         Mage::log($response, null, "bttn.log");
         return $response;
     }
 
     /**
-     * Post result back to bt.tn for button light feedback
+     * Request generation of a new key
      *
-     * @param string $event
-     * @param bool $success
+     * @param string $scope The permissions scope to set for the newly generated key
+     * @param string $name  The name for the new key
+     *
+     * @return bool True on success or false on failure, 
+     * messages logged to bttn-keys.log
      */
-    public function sendResult($event, $success = false)
+    public function newKey($scope = '', $name = '') 
     {
-        if ($success) {
-            $result = "positive";
-        } else {
-            $result = "negative";
+        $response = $this->request('newkey', 'admin', 'post');
+        Mage::log(print_r($response, true), null, 'bttn-keys.log', true);
+        if (is_array($response) && count($response) > 0) {
+            $key = $response[0];
+            if (isset($key->error)) {
+                $error = $key->error;
+                if (isset($key->reason)) {
+                     $error .= ': ' . $key->reason;
+                }
+                return false;
+            } else {
+                $keyModel = Mage::getModel('accolade_bttn/key');
+                $keyModel->setKey($key->apikey);
+                $keyModel->setPrefix($key->prefix);
+                $keyModel->setName($key->name);
+                $keyModel->setScope($key->scope);
+                $keyModel->setCreated($key->created);
+                $keyModel->setExpires($key->expires);
+                $keyModel->setActive(1);
+                if (!empty($scope)) {
+                    $update = $this->updateKey($key->prefix, $scope, $name);
+                    if ($update) {
+                        if (is_array($scope)) {
+                            $keyModel->setScope(implode(',', $scope));
+                        } else {
+                            $keyModel->setScope($scope);
+                        }
+                        $keyModel->setScope($scope);
+                        $keyModel->setName($name);
+                    }
+                }
+                try {
+                    $keyModel->save();
+                    Mage::log(
+                        "New {}$scope} key with id: {$keyModel->getId()}", 
+                        null, 
+                        'bttn-keys.log', 
+                        true
+                    );
+                    return true;
+                } catch (Exception $e) {
+                    Mage::log(
+                        "Failed to create new key: {$e->message}", 
+                        null, 
+                        'bttn-keys.log', 
+                        true
+                    );
+                    return false;
+                }
+            }
         }
-        $response = $this->request(
-            'callback/' . $event, 
-            'POST', 
-            array(
-                array(
-                    'result' => $result
-                )
-            )
+    }
+
+    /**
+     * Update API key data on Bt.tn Servers. Returns true on success or false on 
+     * failure.
+     *
+     * @param string $prefix The prefix of the key you would like to update
+     * @param string $scope  The new scope for the key
+     * @param string $name   The new name for the key
+     *
+     * @return bool   $result True on success or false on failure
+     * */
+    public function updateKey($prefix, $scope = '', $name = '') 
+    {
+        if (empty($prefix)) {
+            return "Prefix must be set to update keys";
+        }
+        $requestData = array(
+            'prefix' => $prefix
         );
-        return $reponse;
+        if (isset($scope)) {
+            if (is_array($scope)) {
+                $requestData['scope'] = $scope;
+            } else {
+                $requestData['scope'] = array (
+                    $scope
+                );
+            }
+        }
+        $response = $this->request('admin/keys', 'admin', 'post', $requestData);
+        $result = $response[0];
+        if (isset($result->error)) {
+            $error = $result->error;
+            if (isset($result->reason)) {
+                 $error .= ': ' . $result->reason;
+            }
+            Mage::log('Error updating key: ' . $error, null, 'bttn-error.log');
+            return false;
+        } else {
+            return true;
+        }
     }
 }
