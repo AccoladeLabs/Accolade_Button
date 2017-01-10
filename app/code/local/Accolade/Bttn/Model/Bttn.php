@@ -1,32 +1,83 @@
 <?php
 
-class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
+/**
+ * This file is part of the Accolade Button for Commerce Magento module.
+ * Please see the license in the root of the directory or at the link below.
+ *
+ * PHP Version 5.6
+ *
+ * @category Magento
+ * @package  Accolade_Bttn
+ * @author   Accolade Partners <info@accolade.fi>
+ * @license  OSL-3.0 https://opensource.org/licenses/OSL-3.0 
+ * @link     https://accolade.fi
+ */
 
+/**
+ * The model class for the Button data. Allows for easy access to all of the
+ * button settings and association data
+ *
+ * @category Magento
+ * @package  Accolade_Bttn
+ * @author   Accolade Partners <info@accolade.fi>
+ * @license  OSL-3.0 https://opensource.org/licenses/OSL-3.0 
+ * @link     https://accolade.fi
+ */
+
+class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract
+{
+
+    /**
+     * Initializes the model
+     *
+     * @return null
+     */
     public function _construct()
     {
         parent::_construct();
         $this->_init('accolade_bttn/bttn', 'entity_id');
     }
 
+    /**
+     * Retrieve customer associated with button model
+     *
+     * @return Mage_Core_Model_Customer_Session
+     */
     public function getCustomer()
     {
         return Mage::getSingleton('customer/session')->getCustomer();
     }
 
+    /**
+     * Retrieve the customer's ID associated with the button
+     *
+     * @return int $customerID
+     */
     public function getCustomerId()
     {
         return Mage::getSingleton('customer/session')->getCustomer()->getId();
     }
 
+    /**
+     * Retrieve the default shipping address for the customer
+     *
+     * @return Mage_Core_Model_Customer_Address
+     */
     public function getDefaultShipping()
     {
-        $shippingData = Mage::getModel('customer/address')->load($this->getCustomer()->default_shipping)->getData();
+        $shippingData = Mage::getModel('customer/address')
+            ->load($this->getCustomer()->default_shipping)->getData();
         if ($shippingData) {
             return $shippingData;
         }
         return false;
     }
 
+    /**
+     * Retrieve the street address for the customer's default shipping address
+     *
+     * @return string Street address
+     */
     public function getStreetAddress()
     {
         if (isset($this->getDefaultShipping()['street'])) {
@@ -35,6 +86,11 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
+    /**
+     * Retrieve the country code for the customer's default shipping address
+     *
+     * @return string country code
+     */
     public function getCountryCode()
     {
         if (isset($this->getDefaultShipping()['country_id'])) {
@@ -43,6 +99,11 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
+    /**
+     * Retrieve the postal code for the customer's default shipping address
+     *
+     * @return string postal code
+     */
     public function getPostcode()
     {
         if (isset($this->getDefaultShipping()['postcode'])) {
@@ -51,13 +112,29 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
+    /**
+     * Confirm that the default shipping address for the customer is filled in
+     *
+     * @return bool true if filled in, false if empty
+     */
     public function getCheckShippingAddress()
     {
-        if ($this->getStreetAddress() !== NULL && $this->getCountryCode() !== NULL && $this->getPostcode() !== NULL) {
+        if ($this->getStreetAddress() !== null 
+            && $this->getCountryCode() !== null 
+            && $this->getPostcode() !== null
+        ) {
             return true;
+        } else {
+            return false;
         }
     }
 
+    /**
+     * Retrieve the primary key identifier for the button associations in
+     * the database
+     *
+     * @return string $entityId
+     */
     public function getBttnEntityId()
     {
         $bttnEntityId = $this->getCollection()
@@ -70,6 +147,11 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
+    /**
+     * Retrieve all customer button associations
+     *
+     * @return Accolade_Bttn_Model_Bttn_Collection
+     */
     public function getCustomerBttns()
     {
         $bttns = $this->getCollection()
@@ -82,8 +164,12 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
     }
 
     /**
-     * @param $customer
-     * @param $bttnId
+     * Set the customer's current button for editing and deleting
+     *
+     * @param Mage_Core_Model_Customer $customer The customer to attach the 
+     * button to
+     * @param string                   $bttnId   The ID of the button to attach
+     *
      * @return int error code
      */
     public function setCustomerBttn($customer, $bttnId)
@@ -95,20 +181,29 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
                 $customer->setBttn($bttn);
                 return 0;
             } else {
-                Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve session data.'));
+                Mage::getSingleton('core/session')
+                    ->addError($this->__('Unable to retrieve session data.'));
                 return 1;
             }
         } else {
-            Mage::getSingleton('core/session')->addError($this->__('Unable to retrieve bttn data.'));
+            Mage::getSingleton('core/session')
+                ->addError($this->__('Unable to retrieve bttn data.'));
             return 1;
         }
     }
 
-    public function getBttnById($id)
+    /**
+     * Retrieve the button model from the button ID
+     *
+     * @param string $buttonId the ID of the button to retrieve
+     *
+     * @return mixed Accolade_Bttn_Model_Bttn on success and false on failure
+     */
+    public function getBttnById($buttonId)
     {
         $bttns = $this->getCollection()
             ->addFieldToFilter('customer_id', $this->getCustomerId())
-            ->addFieldToFilter('button_id', $id)
+            ->addFieldToFilter('button_id', $buttonId)
             ->addFieldToSelect('entity_id');
         $bttn = $bttns->getFirstItem();
         if ($bttn) {
@@ -117,10 +212,17 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
-    public function getCustomerIdFromBttnId($bttnId)
+    /**
+     * Retrieve the customer's ID from the button ID
+     *
+     * @param string $buttonId the ID of the button to retrieve
+     *
+     * @return mixed string on success and false on failure
+     */
+    public function getCustomerIdFromBttnId($buttonId)
     {
         $customerId = $this->getCollection()
-            ->addFieldToFilter('button_id', $bttnId)
+            ->addFieldToFilter('button_id', $buttonId)
             ->addFieldToSelect('customer_id');
         $id = $customerId->getColumnValues('customer_id');
         if (count($id)) {
@@ -129,6 +231,11 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return false;
     }
 
+    /**
+     * Retrieve the shipping method frontend name from the code
+     *
+     * @return string $shippingTitle
+     */
     public function getShippingTitleByCode()
     {
         $shippingTitle = '';
@@ -138,7 +245,10 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
             if ($_methods = $_carrier->getAllowedMethods()) {
                 foreach ($_methods as $_mcode => $_method) {
                     $_code = $_ccode . '_' . $_mcode;
-                    $_methodOptions[] = array('value' => $_code, 'label' => $_method);
+                    $_methodOptions[] = array(
+                        'value' => $_code, 
+                        'label' => $_method
+                    );
                 }
                 if (!$_title = Mage::getStoreConfig("carriers/$_ccode/title")) {
                     $_title = $_ccode;
@@ -148,6 +258,11 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return $shippingTitle;
     }
 
+    /**
+     * Retrieve the payment method frontend name from the code
+     *
+     * @return string $paymentTitle
+     */
     public function getPaymentTitleByCode()
     {
         $payments = Mage::getSingleton('payment/config')->getActiveMethods();
@@ -160,11 +275,17 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return $paymentTitle;
     }
 
+    /**
+     * Confirm that order/wishlist is properly configured for purchase
+     *
+     * @return mixed
+     */
     public function getCheckTemplate()
     {
         $isValid = 1;
-        if ($this->getOrderMethod() == 'wishlist'){
-            $wishList = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($this->getCustomerId());
+        if ($this->getOrderMethod() == 'wishlist') {
+            $wishList = Mage::getSingleton('wishlist/wishlist')
+                ->loadByCustomer($this->getCustomerId());
             $wishListItemCollection = $wishList->getItemCollection();
             //# check if customer has items in wishlist
             if (count($wishListItemCollection)) {
@@ -186,7 +307,8 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
             }
         } else {
             //# get products from selected order
-            $order = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderMethod());
+            $order = Mage::getModel('sales/order')
+                ->loadByIncrementId($this->getOrderMethod());
             $items = $order->getItemsCollection();
             foreach ($items as $item) {
                 if (!$item->getProduct()->getId()) {
@@ -197,11 +319,20 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return $isValid;
     }
 
+    /**
+     * Attach products to quote
+     *
+     * @param Mage_Core_Model_Quote $quote The quote to attach the shipping 
+     * data to
+     *
+     * @return Mage_Core_Model_Quote
+     */
     public function addItemsToQuote($quote)
     {
-        if ($this->getOrderMethod() == 'wishlist'){
+        if ($this->getOrderMethod() == 'wishlist') {
             //# get products from wishlist
-            $wishList = Mage::getSingleton('wishlist/wishlist')->loadByCustomer($this->getCustomerId());
+            $wishList = Mage::getSingleton('wishlist/wishlist')
+                ->loadByCustomer($this->getCustomerId());
             $wishListItemCollection = $wishList->getItemCollection();
             //# check if customer has items in wishlist
             if (count($wishListItemCollection)) {
@@ -221,7 +352,8 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
             }
         } else {
             //# get products from selected order
-            $order = Mage::getModel('sales/order')->loadByIncrementId($this->getOrderMethod());
+            $order = Mage::getModel('sales/order')
+                ->loadByIncrementId($this->getOrderMethod());
             $items = $order->getItemsCollection();
             foreach ($items as $item) {
                 $productId = $item->getProduct()->getId();
@@ -232,11 +364,21 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         return $quote;
     }
 
+    /**
+     * Attach shipping data to quote
+     *
+     * @param Mage_Core_Model_Quote $quote The quote to attach the shipping 
+     * data to
+     *
+     * @return Mage_Core_Model_Quote
+     */
     public function getShippingData($quote)
     {
         //# get customer's default shipping address
-        $shippingAddressId = Mage::getModel('customer/customer')->load($this->getCustomerId())->getDefaultShipping();
-        $shippingAddress = Mage::getModel('customer/address')->load($shippingAddressId);
+        $shippingAddressId = Mage::getModel('customer/customer')
+            ->load($this->getCustomerId())->getDefaultShipping();
+        $shippingAddress = Mage::getModel('customer/address')
+            ->load($shippingAddressId);
         $shippingAddressData = array(
             'firstname' => $shippingAddress->getFirstname(),
             'lastname' => $shippingAddress->getLastname(),
@@ -249,20 +391,34 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
             'region_id' => $shippingAddress->getRegionId(),
         );
         //# add shipping address to quote
-        $shippingAddress = $quote->getShippingAddress()->addData($shippingAddressData);
+        $shippingAddress = $quote->getShippingAddress()
+            ->addData($shippingAddressData);
         //# collect rates
         $shippingAddress->setCollectShippingRates(true)
             ->collectShippingRates()
             ->setShippingMethod($this->getShippingMethod())
             ->setPaymentMethod($this->getPaymentMethod());
         if ($this->getPaymentMethod()) {
-            $quote->getPayment()->importData(array('method' => $this->getPaymentMethod()));
+            $quote->getPayment()
+                ->importData(array('method' => $this->getPaymentMethod()));
         }
-        $quote->setStoreId(Mage::getSingleton('customer/customer')->load($this->getCustomerId())->getStoreId());
+        $quote->setStoreId(
+            Mage::getSingleton('customer/customer')
+            ->load($this->getCustomerId())->getStoreId()
+        );
         $quote->collectTotals();
         return $quote;
     }
 
+    /**
+     * Retrieve the totals in various formats for the order
+     *
+     * @param Mage_Sales_Model_Quote $quote    The quote to get the totals for
+     * @param string                 $variable If set, get shipping rates
+     * instead
+     *
+     * @return mixed
+     */
     public function getTotals($quote, $variable)
     {
         //# add items to quote
@@ -274,7 +430,9 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
             ->setPostcode($this->getPostcode())
             ->setCollectShippingrates(true);
         if (!Mage::helper('accolade_bttn')->showTax()) {
-            $address->setGrandTotal($address->getGrandTotal() - $address->getData('tax_amount'));
+            $address->setGrandTotal(
+                $address->getGrandTotal() - $address->getData('tax_amount')
+            );
         }
         //# get shipping rates
         if ($variable == 'shipping') {
@@ -285,11 +443,23 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract {
         }
     }
 
-    public function getEditUrl() {
+    /**
+     * Retrieve store URL to post edit requests for button association data
+     *
+     * @return string $editUrl
+     */
+    public function getEditUrl() 
+    {
         return Mage::getUrl("*/*/edit/id/" . $this->getButtonId());
     }
 
-    public function getDeleteUrl() {
+    /**
+     * Retrieve store URL to post delete requests for button association data
+     *
+     * @return string $deleteUrl
+     */
+    public function getDeleteUrl() 
+    {
         return Mage::getUrl("*/*/delete/id/" . $this->getButtonId());
     }
 }

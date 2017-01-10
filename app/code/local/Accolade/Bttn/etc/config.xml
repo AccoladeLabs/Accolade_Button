@@ -33,6 +33,16 @@
                 <class>Accolade_Bttn_Block</class>
             </accolade_bttn>
         </blocks>
+        <events>
+            <admin_system_config_changed_section_accolade>
+                <observers>
+                    <accolade_bttn>
+                        <class>accolade_bttn/observer</class>
+                        <method>checkAllApiKeys</method>
+                    </accolade_bttn>
+                </observers>
+            </admin_system_config_changed_section_accolade>
+        </events>
         <resources>
             <accoladebttn_setup>
                 <setup>
