@@ -179,6 +179,7 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract
             // Make sure the button belongs to the customer trying to access it
             if ($customer) {
                 $customer->setBttn($bttn);
+                Mage::log($bttn->getEntityId(), null, 'model.log', true);
                 return 0;
             } else {
                 Mage::getSingleton('core/session')

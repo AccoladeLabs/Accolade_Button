@@ -129,8 +129,9 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
      */
     public function newAction()
     {
+        $newButton = Mage::getModel('accolade_bttn/bttn');
         Mage::getSingleton('customer/session')
-            ->setBttn(Mage::getModel('accolade_bttn/bttn'));
+            ->setBttn($newButton);
         $this->_forward('edit');
     }
 
@@ -154,13 +155,17 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
         $model = Mage::getSingleton('customer/session')->getBttn();
         $new = false;
         if (!$model) {
-            $model = Mage::getSingleton('accolade_bttn/bttn');
+            $model = Mage::getModel('accolade_bttn/bttn');
+            Mage::log("The model is NOT set, setting new to true", null, 'model.log', true);
             $new = true;
+        } else {
+            Mage::log("The model is set, new = " .$new . " entity ID = " . $model->getEntityId(), null, 'model.log', true);
         }
         if (empty($model)) {
             Mage::getSingleton('core/session')
                 ->addError($this->__('Unable to retrieve Bt.tn data'));
         } else {
+            Mage::log("Saving model " . $model->getEntityId(), null, 'bttn-save.log', true);
             $values = array(
                 "button_id" => array(
                     "test" => function ($id) {
@@ -176,8 +181,12 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
                     }
                 ),
                 "shipping_method" => array(
-                    "test" => function ($method) {
-                        return !empty($method);
+                    "test" => function ($method, $new = false) {
+                        if ($new) {
+                            return true;
+                        } else {
+                            return !empty($method);
+                        }
                     },
                     "error_message" => $this->__('Invalid shipping method')
                 ),
@@ -242,15 +251,18 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
                 }
             }
             if (count($data) > 0) {
-                if ($new) {
-                    $model->addData($data);
-                } else {
-                    $data['customer_id'] = Mage::getModel('accolade_bttn/bttn')
-                        ->getCustomerId();
-                    $model->setData($data);
-                }
                 try {
-                    $model->save();
+                    if ($new) {
+                        Mage::log("Saving new model: " . $model->getEntityId(), null, 'bttn-save.log', true);
+                        $model->addData($data);
+                        $model->save();
+                    } else {
+                        Mage::log("Updating existing model: " . $model->getEntityId(), null, 'bttn-save.log', true);
+                        //$data['customer_id'] = Mage::getModel('accolade_bttn/bttn')
+                            //->getCustomerId();
+                        $model->setData($data);
+                        $model->setId($model->getEntityId())->save();
+                    }
                 } catch (Exception $e){
                     $error = 1;
                     Mage::log($e->getMessage());

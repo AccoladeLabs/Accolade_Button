@@ -44,7 +44,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
                     'url'       => $this->getCallbackUrl(),
                     'method'    => 'post',
                     'headers'   => array(
-                        'X-Api-Key' => $this->getApiKey()
+                        'X-Api-Key' => $this->getApiKey('press')
                     ),
                     'json'      => array(
                         'association' => $association_id,
@@ -58,7 +58,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
                     'url'       => $this->getCallbackUrl(),
                     'method'    => 'post',
                     'headers'   => array(
-                        'X-Api-Key' => $this->getApiKey()
+                        'X-Api-Key' => $this->getApiKey('press')
                     ),
                     'json'      => array(
                         'association' => $association_id,
@@ -99,7 +99,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         case 'read':
             // Fallthrough
         case 'write':
-            return Mage::getModel('accolade_bttn/key')->getKeyByScope($scope);
+            return Mage::getModel('accolade_bttn/key')->load($scope, 'scope');
         default: 
             throw new Exception('Undefined API key scope: $scope');
         }
@@ -203,7 +203,7 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
                 // return the association_id
                 $dataResponse = $this->setBttnData(
                     $response[0]->associd, 
-                    $this->_getCallbackData()
+                    $this->_getCallbackData($buttonId, $response[0]->associd)
                 );
                 return array('association_id' => $response[0]->associd);
             } else if (isset($response[0]->error)) {
@@ -390,5 +390,26 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         } else {
             return true;
         }
+    }
+
+    /**
+     * Confirm key matches scope
+     *
+     * @param string $scope the scope to compare with
+     * @param string $key   they key to check
+     *
+     * @return bool true if the scope matches, false if not
+     */
+    public function checkKey($scope, $key) 
+    {
+        $valid = false;
+        $keyModel = Mage::getModel('accolade_bttn/key')
+            ->load($key, 'api_key');
+        if ($keyModel) {
+            if ($keyModel->getScope() == $scope) {
+                $valid = true;
+            }
+        }
+        return $valid;
     }
 }

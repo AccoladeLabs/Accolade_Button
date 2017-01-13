@@ -43,24 +43,6 @@ class Accolade_Bttn_Model_Key extends Mage_Core_Model_Abstract
     }
 
     /**
-     * Retrieve the key model from the API key
-     *
-     * @param string $key the API key
-     *
-     * @return mixed Accolade_Bttn_Model_Key class instance on success or false
-     * on failure
-     */
-    public function getModelFromKey($key)
-    {
-        $keyCollection = $this->getCollection()
-            ->addFieldToFilter('key', $key);
-        if ($keyCollection->getSize()) {
-            return $bttns;
-        }
-        return false;
-    }
-
-    /**
      * Check all keys to make sure they exist for each scope and
      * are not expired. Run in cron once per month
      *
@@ -74,26 +56,6 @@ class Accolade_Bttn_Model_Key extends Mage_Core_Model_Abstract
             foreach ($this->_keyScopes as $scope) {
                 Mage::helper('accolade_bttn/api')->newKey($scope);
             }
-        }
-    }
-
-    /**
-     * Retrieve the API key needed for the given scope
-     *
-     * @param string $scope The scope requested
-     *
-     * @return mixed The API key requested on success or false on failure
-     */
-    public function getKeyByScope($scope) 
-    {
-        $key = $this->getCollection()
-            ->addFieldToFilter('active', 1)
-            ->addFieldToFilter('scope', $scope)
-            ->addFieldToSelect('key');
-        if ($key->getSize() > 0) {
-            return $key->getFirstItem()->getKey();
-        } else {
-            return false;
         }
     }
 }
