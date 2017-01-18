@@ -154,7 +154,8 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
         $apiHelper = Mage::helper('accolade_bttn/api');
         $model = Mage::getSingleton('customer/session')->getBttn();
         $new = false;
-        if (empty($model->getEntityId())) {
+        $entityId = $model->getEntityId();
+        if (empty($entityId)) {
             $model = Mage::getModel('accolade_bttn/bttn');
             $new = true;
         } else {
