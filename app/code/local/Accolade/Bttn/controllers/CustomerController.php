@@ -154,22 +154,18 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
         $apiHelper = Mage::helper('accolade_bttn/api');
         $model = Mage::getSingleton('customer/session')->getBttn();
         $new = false;
-        if (!$model) {
+        if (empty($model->getEntityId())) {
             $model = Mage::getModel('accolade_bttn/bttn');
-            Mage::log("The model is NOT set, setting new to true", null, 'model.log', true);
             $new = true;
         } else {
-            Mage::log("The model is set, new = " .$new . " entity ID = " . $model->getEntityId(), null, 'model.log', true);
         }
         if (empty($model)) {
             Mage::getSingleton('core/session')
                 ->addError($this->__('Unable to retrieve Bt.tn data'));
         } else {
-            Mage::log("Saving model " . $model->getEntityId(), null, 'bttn-save.log', true);
             $values = array(
                 "button_id" => array(
                     "test" => function ($id) {
-                        Mage::log('New ID: ' . $id, null, 'bttn.log');
                         return preg_match(
                             '/[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}/', 
                             $id
@@ -206,6 +202,8 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
             $data = array();
             foreach ($values as $key => $validation) {
                 if (isset($_POST[$key])) {
+                    // Check to see if the values have been updated, and only
+                    // update those values which are new
                     $value = $_POST[$key];
                     $update = true;
                     if ($model->getData($key) == $value) {
@@ -252,20 +250,13 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
             }
             if (count($data) > 0) {
                 try {
-                    if ($new) {
-                        Mage::log("Saving new model: " . $model->getEntityId(), null, 'bttn-save.log', true);
-                        $model->addData($data);
-                        $model->save();
-                    } else {
-                        Mage::log("Updating existing model: " . $model->getEntityId(), null, 'bttn-save.log', true);
-                        //$data['customer_id'] = Mage::getModel('accolade_bttn/bttn')
-                            //->getCustomerId();
-                        $model->setData($data);
-                        $model->setId($model->getEntityId())->save();
-                    }
+                    $data['customer_id'] = Mage::getModel('accolade_bttn/bttn')
+                        ->getCustomerId();
+                    $model->addData($data);
+                    $model->save();
                 } catch (Exception $e){
                     $error = 1;
-                    Mage::log($e->getMessage());
+                    Mage::log($e->getMessage(), null, 'bttn-error.log', true);
                 }
                 if ($error == 0) {
                     Mage::getSingleton('core/session')
