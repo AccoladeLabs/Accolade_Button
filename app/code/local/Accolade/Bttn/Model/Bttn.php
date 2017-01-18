@@ -400,12 +400,11 @@ class Accolade_Bttn_Model_Bttn extends Mage_Core_Model_Abstract
             ->setShippingMethod($this->getShippingMethod())
             ->setPaymentMethod($this->getPaymentMethod());
         if ($this->getPaymentMethod()) {
-            // Make sure the payment method is available first
-            $payment = $quote->getPayment();
-            $method = $payment->getMethodInstance();
-            if ($method->isAvailable($quote)) {
-                $payment->importData(array('method' => $this->getPaymentMethod()));
-            } else {
+            // Handle errors properly
+            try {
+                $quote->getPayment()
+                    ->importData(array('method' => $this->getPaymentMethod()));
+            } catch (Exception $e) {
                 Mage::getSingleton('customer/session')->addError(
                     Mage::helper('core')->__(
                         'The selected payment method is not available. ' .

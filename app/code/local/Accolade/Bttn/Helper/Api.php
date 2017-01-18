@@ -99,7 +99,9 @@ class Accolade_Bttn_Helper_Api extends Mage_Core_Helper_Abstract
         case 'read':
             // Fallthrough
         case 'write':
-            return Mage::getModel('accolade_bttn/key')->load($scope, 'scope');
+            return Mage::getModel('accolade_bttn/key')
+                ->load($scope, 'scope')
+                ->getApiKey();
         default: 
             throw new Exception('Undefined API key scope: $scope');
         }

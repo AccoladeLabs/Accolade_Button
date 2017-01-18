@@ -62,6 +62,7 @@ class Accolade_Bttn_ApiController extends Mage_Core_Controller_Front_Action
                     Mage::log('Data is complete', null, 'bttn-press.log', true);
                     $bttnId = $data->button;
                     Mage::log('Button: ' . $bttnId, null, 'bttn-press.log', true);
+                    $bttn = Mage::getModel('accolade_bttn/bttn')->load($bttnId, 'button_id');
                     // identify customer by Bt.tn device ID
                     $customerId = Mage::getModel('accolade_bttn/bttn')
                         ->getCustomerIdFromBttnId($bttnId);
@@ -71,11 +72,9 @@ class Accolade_Bttn_ApiController extends Mage_Core_Controller_Front_Action
                     // get quote
                     $quote = Mage::getSingleton('checkout/session')->getQuote();
                     // load quote and add products
-                    $quote = Mage::getSingleton('accolade_bttn/bttn')
-                        ->addItemsToQuote($quote);
+                    $quote = $bttn->addItemsToQuote($quote);
                     // get shipping data
-                    $quote = Mage::getSingleton('accolade_bttn/bttn')
-                        ->getShippingData($quote);
+                    $quote = $bttn->getShippingData($quote);
                     // save quote
                     $quote->save();
                     // init checkout
@@ -90,7 +89,7 @@ class Accolade_Bttn_ApiController extends Mage_Core_Controller_Front_Action
                     }
                     catch (Exception $ex) {
                         $error = $ex->getMessage();
-                        Mage::log($error, null, 'bttn-error.log');
+                        Mage::log('Error completing purchase: ' . $error, null, 'bttn-error.log');
                         // send message to API - error
                     }
                 } else {
