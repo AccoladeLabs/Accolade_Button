@@ -1,6 +1,6 @@
 <?php $bttn= Mage::getSingleton('customer/session')->getBttn() ?>
 
-<div class="col-1 shipping-method" style="padding-left: 20px">
+<div class="col-1 shipping-method">
 	<ol>
 	<h2><?php echo $this->__('Shipping Method') ?></h2>
 		<li class="item">
@@ -19,8 +19,10 @@
 								<?php foreach ($carrier as $rate): ?>
 									<?php if (!in_array($rate->getData()['carrier_title'], $carrierArr)): ?>
 										<?php array_push($carrierArr, $rate->getData()['carrier_title']) ?>
-										</div><div class="shipping_scrollable" style="max-height:200px;border:1px;overflow:auto;"><br/>
-										<h3><?php echo $rate->getData()['carrier_title'] ?></h3>
+										</div>
+                                        <div class="shipping-scrollable">
+                                            <br/>
+                                            <h3><?php echo $rate->getData()['carrier_title'] ?></h3>
 									<?php endif; ?>
 									<?php $methodTitle = $rate->getData()['method_title'] ?>
 									<?php $formattedPrice = Mage::helper('core')->currency($rate->getData()['price'],true,false) ?>

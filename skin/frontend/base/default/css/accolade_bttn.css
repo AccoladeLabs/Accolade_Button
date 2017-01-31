@@ -17,3 +17,29 @@
 .button-delete {
     color: #df280a;
 }
+
+.f-right {
+    float: right;
+}
+
+.order-scrollable {
+    max-height:500px;
+    overflow:auto;
+}
+.order-scrollable .data-table {
+    margin-top: 0px;
+}
+
+.order-scrollable .data-table .radio {
+    margin-top: 6px;
+}
+
+.shipping-method, .payment-method {
+    padding-left: 20px;
+}
+
+.shipping-scrollable {
+    max-height:200px;
+    border:1px;
+    overflow:auto;
+}

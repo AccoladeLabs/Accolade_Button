@@ -30,10 +30,10 @@
 							</td>
 						</tbody>
 					</table>
-					<div class="order_scrollable" style="max-height:500px;overflow:auto;">
+					<div class="order-scrollable">
 					<?php $_orders = Mage::getModel('sales/order')->getCollection()->addFieldToFilter('customer_id', $bttn->getCustomerId())->addFieldToSelect('*')->addOrder('entity_id', 'desc') ?>
 					<?php if ($_orders->getSize()): ?>
-						<table class="data-table" id="my-orders-table" style="margin-top: 0px;">
+						<table class="data-table" id="my-orders-table">
 							<col width="1" />
 							<thead>
 								<tr>
@@ -48,9 +48,9 @@
 									<td class="a-center">
 									<?php $order_id = $_order->getRealOrderId() ?>
 									<?php if($orderMethod == $order_id): ?>
-										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" style="margin-top: 6px;" checked required />
+										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" checked required />
 									<?php else: ?>
-										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" style="margin-top: 6px;" required />
+										<input class="radio" type="radio" name="order_method" value="<?php echo $order_id ?>" required />
 									<?php endif; ?>
 									</td>
 									<td><?php echo $_order->getRealOrderId() ?></td>
