@@ -20,6 +20,7 @@
             </admin>
         </resources>
     </acl>
+    <!-- TODO: Implement admin functionality
     <menu>
         <accolade_bttn>
             <title>Bt.tn</title>
@@ -33,4 +34,5 @@
             </children>
         </accolade_bttn>
     </menu>
+    -->
 </config>
