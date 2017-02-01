@@ -8,6 +8,12 @@
  */
 class Accolade_Bttn_Adminhtml_BttnController extends Mage_Adminhtml_Controller_Action
 {
+    protected function _isAllowed()
+    {
+        return Mage::getSingleton('admin/session')
+            ->isAllowed('system/config');
+    }
+
     public function deleteAction() {
         if( $this->getRequest()->getParam('id') > 0 ) {
             try {
