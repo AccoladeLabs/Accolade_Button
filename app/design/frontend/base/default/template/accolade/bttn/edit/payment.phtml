@@ -7,17 +7,20 @@
                 <ul class="form-list">
                     <li>
                         <label for="button_id" class="required"><?php echo $this->__('Choose default payment method') ?><em>*</em></label>
+                    </li>
                         <?php $allowedMethods = explode(',', Mage::getStoreConfig('accolade/allowed_payment_methods/payment_methods')) ?>
                         <?php $payments = Mage::getSingleton('payment/config')->getActiveMethods() ?>
                         <?php $paymentMethod = $bttn->getPaymentMethod() ?>
                         <?php foreach ($payments as $paymentCode=>$paymentModel): ?>
                             <?php if (in_array($paymentCode, $allowedMethods)) : ?>
+                                <li>
                                 <?php $paymentTitle = Mage::getStoreConfig('payment/'.$paymentCode.'/title') ?>
                                 <?php if ($paymentMethod == $paymentCode) : ?>
-                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" checked required />&nbsp;&nbsp;<?php echo $paymentTitle ?><br/><br/>
+                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" checked required />&nbsp;&nbsp;<?php echo $paymentTitle ?>
                                 <?php else: ?>
-                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" required />&nbsp;&nbsp;<?php echo $paymentTitle ?><br/><br/>
+                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" required />&nbsp;&nbsp;<?php echo $paymentTitle ?>
                                 <?php endif; ?>
+                                </li>
                             <?php endif; ?>
                         <?php endforeach; ?>
                     </li>
