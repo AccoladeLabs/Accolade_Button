@@ -4,7 +4,7 @@
         <h2><?php echo $this->__('Payment Method') ?></h2>
         <li class="item">
             <div class="fieldset">
-                <ul class="form-list">
+                <ul>
                     <li>
                         <label for="button_id" class="required"><?php echo $this->__('Choose default payment method') ?><em>*</em></label>
                     </li>
@@ -16,9 +16,9 @@
                                 <li>
                                 <?php $paymentTitle = Mage::getStoreConfig('payment/'.$paymentCode.'/title') ?>
                                 <?php if ($paymentMethod == $paymentCode) : ?>
-                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" checked required />&nbsp;&nbsp;<?php echo $paymentTitle ?>
+                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" checked required /><label><?php echo $paymentTitle ?></label>
                                 <?php else: ?>
-                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" required />&nbsp;&nbsp;<?php echo $paymentTitle ?>
+                                    <input class="radio" type="radio" name="payment_method" value="<?php echo $paymentCode ?>" required /><label><?php echo $paymentTitle ?></label>
                                 <?php endif; ?>
                                 </li>
                             <?php endif; ?>
