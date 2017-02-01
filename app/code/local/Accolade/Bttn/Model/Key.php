@@ -24,12 +24,12 @@
  */
 class Accolade_Bttn_Model_Key extends Mage_Core_Model_Abstract
 {
-    private $_keyScopes = [
+    private $_keyScopes = array(
         'associate',
         'read',
         'press',
         'write'
-    ];
+    );
 
     /**
      * Accolade_Bttn_Model_Key constructor function
