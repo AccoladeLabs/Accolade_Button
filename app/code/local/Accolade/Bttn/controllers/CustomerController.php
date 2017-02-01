@@ -201,11 +201,12 @@ class Accolade_Bttn_CustomerController extends Mage_Core_Controller_Front_Action
                 ),
             );
             $data = array();
+            $post = $this->getRequest()->getPost();
             foreach ($values as $key => $validation) {
-                if (isset($_POST[$key])) {
+                if (isset($post[$key])) {
                     // Check to see if the values have been updated, and only
                     // update those values which are new
-                    $value = $_POST[$key];
+                    $value = $post[$key];
                     $update = true;
                     if ($model->getData($key) == $value) {
                         $update = false;
