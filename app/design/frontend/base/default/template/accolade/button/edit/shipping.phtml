@@ -1,0 +1,56 @@
+<?php $button= Mage::getSingleton('customer/session')->getButton() ?>
+<div class="col-1 shipping-method">
+    <ol>
+    <h2><?php echo $this->__('Shipping Method') ?></h2>
+        <li class="item">
+        <div class="fieldset">
+            <ul>
+            <li>
+                <label for="button_id" class="required"><?php echo $this->__('Choose default shipping method') ?><em>*</em></label>
+                        </li>
+            <?php $checkShippingAddress = $button->getCheckShippingAddress();
+            $orderMethod = $button->getOrderMethod();
+            $isValid = $button->getCheckTemplate();
+            if ($checkShippingAddress && $orderMethod != '' && $isValid == 1):
+                $quote = Mage::getModel('sales/quote');
+                $rates = $button->getTotals($quote, 'shipping');
+                $carrierArr = array();
+                $shippingMethod = $button->getShippingMethod();
+                foreach ($rates as $carrier):
+                    foreach ($carrier as $rate):
+                        if (!in_array($rate->getData()['carrier_title'], $carrierArr)):
+                            array_push($carrierArr, $rate->getData()['carrier_title']) ?>
+                </div> <!-- fieldset -->
+                <div class="shipping-scrollable">
+                    <h3>
+                        <?php echo $rate->getData()['carrier_title'] ?>
+                    </h3>
+                    <ul>
+                        <?php endif; ?>
+                        <?php $methodTitle = $rate->getData()['method_title'] ?>
+                        <?php $formattedPrice = Mage::helper('core')->currency($rate->getData()['price'],true,false) ?>
+                        <?php if ($shippingMethod == $rate->getData()['code']): ?>
+                                        <li>
+                                <input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" checked required /><label><?php echo $methodTitle.'  '.$formattedPrice ?></label>
+                                        </li>
+                        <?php else: ?>
+                                        <li>
+                                <input class="radio" type="radio" name="shipping_method" value="<?php echo $rate->getData()['code'] ?>" required /><label><?php echo $methodTitle.'  '.$formattedPrice ?></label>
+                                        </li>
+                    <?php endif; ?>
+                    <?php endforeach; ?>
+                                </ul>
+                <?php endforeach; ?>
+            <?php elseif ($isValid == 'wishlistHasConfigurable'): ?>
+                <h3><?php echo $this->__('Wishlist contains product(s) with no required options') ?></h3>
+            <?php elseif ($checkShippingAddress && $orderMethod == ''): ?>
+                <h3><?php echo $this->__('Select your order template first') ?></h3>
+            <?php elseif ($isValid == 0): ?>
+                <h3><?php echo $this->__('Order template is empty') ?></h3>
+            <?php else: ?>
+                <h3><?php echo $this->__('Please add your address from the account settings') ?></h3>
+            <?php endif; ?>
+            </ul>
+    </li>
+    </ol>
+</div>

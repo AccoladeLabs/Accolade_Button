@@ -1,0 +1,22 @@
+<div class="page-title">
+	<h1><?php echo $this->__('My Button') ?></h1>
+</div>
+<?php $button = Mage::getSingleton('customer/session')->getButton() ?>
+<?php echo $this->getMessagesBlock()->toHtml() ?>
+<form action="<?php echo $this->getUrl('*/*/save/') ?>" id="form" method="post" name="form">
+    <div class="col2-set top">
+        <?php echo $this->getChildHtml('edit.button.settings') ?>
+        <?php echo $this->getChildHtml('edit.payment') ?>
+    </div>
+    <div class="col2-set middle">
+        <?php echo $this->getChildHtml('edit.shipping') ?>
+        <?php echo $this->getChildHtml('edit.ordertemplate') ?>
+    </div>
+    <div class="col3-set bottom">
+        <?php echo $this->getChildHtml('totals') ?>
+    </div>
+    <div class="buttons-set">
+        <p class="back-link"><a href="<?php echo $this->getUrl("accolade_button/customer") ?>"><small>&laquo; </small><?php echo $this->__('Back') ?></a></p>
+        <button type="submit" title="<?php echo $this->__('Save') ?>" class="button f-right"><span><span><?php echo $this->__('Save') ?></span></span></button>
+    </div>
+</form>

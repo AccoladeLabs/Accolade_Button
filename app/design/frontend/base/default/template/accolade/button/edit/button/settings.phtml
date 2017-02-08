@@ -1,0 +1,21 @@
+<?php $button= Mage::getSingleton('customer/session')->getButton() ?>
+<div class="col-2 edit-button-settings">
+    <ol>
+        <h2><?php echo $this->__('Edit Button Settings') ?></h2>
+        <li class="item">
+            <div class="fieldset">
+                <ul>
+                    <li>
+                        <label for="button_id" class="required">
+                            <?php echo $this->__('Button Device ID') ?>
+                            <em>*</em>
+                        </label>
+                        <div class="input-box">
+                            <input type="text" name="button_id" alt="button_id" id="button_id" class="input-text" value="<?php echo $button->getButtonId() ?>" required />
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    </ol>
+</div>

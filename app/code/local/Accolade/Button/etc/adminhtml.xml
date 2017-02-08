@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <acl>
+        <resources>
+            <admin>
+                <children>
+                    <system>
+                        <children>
+                            <config>
+                                <children>
+                                    <accolade translate="title" module="accolade_button">
+                                        <title>accolade</title>
+                                        <sort_order>999</sort_order>
+                                    </accolade>
+                                </children>
+                            </config>
+                        </children>
+                    </system>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+    <!-- TODO: Implement admin functionality
+    <menu>
+        <accolade_button>
+            <title>Button</title>
+            <sort_order>41</sort_order>
+            <children>
+                <button translate="title" module="accolade_button">
+                    <title>Manage Associations</title>
+                    <sort_order>10</sort_order>
+                    <action>adminhtml/button</action>
+                </button>
+            </children>
+        </accolade_button>
+    </menu>
+    -->
+</config>

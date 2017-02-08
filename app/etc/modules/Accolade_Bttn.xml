@@ -1,9 +1,0 @@
-<?xml version="1.0"?>
-<config>
-    <modules>
-        <Accolade_Bttn>
-            <active>true</active>
-            <codePool>local</codePool>
-        </Accolade_Bttn>
-    </modules>
-</config>

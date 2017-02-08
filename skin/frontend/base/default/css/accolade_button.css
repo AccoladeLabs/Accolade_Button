@@ -1,0 +1,54 @@
+.page-title.title-buttons button {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+.page-title.title-buttons h1 {
+    border-bottom: 0;
+}
+.page-title.title-buttons {
+    position: relative;
+}
+
+.button-id, .button-links {
+    display: block;
+}
+
+.button-delete {
+    color: #df280a;
+}
+
+.f-right {
+    float: right;
+}
+
+label.required {
+    margin-bottom: 10px;
+}
+
+.radio {
+    vertical-align: middle;
+}
+
+.order-scrollable {
+    max-height:500px;
+    overflow:auto;
+}
+.order-scrollable .data-table {
+    margin-top: 0px;
+}
+
+.order-scrollable .data-table .radio {
+    margin-top: 6px;
+}
+
+.shipping-method, .payment-method {
+    padding-left: 20px;
+}
+
+.shipping-scrollable {
+    margin-bottom: 10px;
+    max-height:200px;
+    border:1px;
+    overflow:auto;
+}
