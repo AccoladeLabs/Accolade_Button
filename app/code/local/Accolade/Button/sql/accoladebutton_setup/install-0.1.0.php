@@ -18,7 +18,7 @@ $installer = $this;
 $installer->startSetup();
 
 $associationTable = $installer->getConnection()
-    ->newTable(getTable('accolade_button_associations'))
+    ->newTable($installer->getTable('accolade_button_associations'))
     ->addColumn(
         'entity_id',
         Varien_Db_Ddl_Table::TYPE_INTEGER,
@@ -91,7 +91,7 @@ $associationTable = $installer->getConnection()
 $installer->getConnection()->createTable($associationTable);
 
 $keyTable = $installer->getConnection()
-    ->newTable(getTable('accolade_button_keys'))
+    ->newTable($installer->getTable('accolade_button_keys'))
     ->addColumn(
         'id',
         Varien_Db_Ddl_Table::TYPE_INTEGER,
@@ -152,7 +152,7 @@ $keyTable = $installer->getConnection()
     )
     ->addColumn(
         'created',
-        Varien_Db_Ddl_Table::TYPE_DATETIMED,
+        Varien_Db_Ddl_Table::TYPE_DATETIME,
         null,
         array(
             'nullable' => false
@@ -161,7 +161,7 @@ $keyTable = $installer->getConnection()
     )
     ->addColumn(
         'expires',
-        Varien_Db_Ddl_Table::TYPE_DATETIMED,
+        Varien_Db_Ddl_Table::TYPE_DATETIME,
         null,
         array(
             'nullable' => false
