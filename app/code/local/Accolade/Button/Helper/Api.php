@@ -25,7 +25,7 @@
 
 class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
 {
-    protected $_apiUrl = 'https://your.button/serves/';
+    protected $_apiUrl = 'https://your.bt.tn/serves/';
 
     protected $_version = 'v1';
 
