@@ -3,3 +3,6 @@ app/design/frontend/base/default/layout/accolade_button.xml
 app/design/frontend/base/default/template/accolade/button
 app/etc/modules/Accolade_Button.xml
 skin/frontend/base/default/css/accolade_button.css
+
+# Uncomment the next line for tests
+#tests/Accolade/Button tests/unit/testsuite/Accolade/Button
