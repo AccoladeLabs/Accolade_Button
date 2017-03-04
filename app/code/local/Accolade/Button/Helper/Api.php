@@ -8,7 +8,7 @@
  * @category Magento
  * @package  Accolade_Button
  * @author   Accolade Partners <info@accolade.fi>
- * @license  OSL-3.0 https://opensource.org/licenses/OSL-3.0 
+ * @license  OSL-3.0 https://opensource.org/licenses/OSL-3.0
  * @link     https://accolade.fi
  */
 
@@ -19,10 +19,9 @@
  * @category Magento
  * @package  Accolade_Button
  * @author   Accolade Partners <info@accolade.fi>
- * @license  OSL-3.0 https://opensource.org/licenses/OSL-3.0 
+ * @license  OSL-3.0 https://opensource.org/licenses/OSL-3.0
  * @link     https://accolade.fi
  */
-
 class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
 {
     protected $_apiUrl = 'https://your.bt.tn/serves/';
@@ -32,21 +31,22 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
     /**
      * Retrieve the callback data necessary for button presses to work
      *
-     * @param string $button_id      The button's association IDd
+     * @param string $button_id The button's association IDd
      * @param string $association_id The button's association ID
      *
      * @return array
      */
-    protected function _getCallbackData($button_id, $association_id) {
+    protected function _getCallbackData($button_id, $association_id)
+    {
         return array(
             'pressed' => array(
                 'http' => array(
-                    'url'       => $this->getCallbackUrl(),
-                    'method'    => 'post',
-                    'headers'   => array(
+                    'url' => $this->getCallbackUrl(),
+                    'method' => 'post',
+                    'headers' => array(
                         'X-Api-Key' => $this->getApiKey('press')
                     ),
-                    'json'      => array(
+                    'json' => array(
                         'association' => $association_id,
                         'button' => $button_id,
                         'type' => 'short'
@@ -55,12 +55,12 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
             ),
             'pressed-long' => array(
                 'http' => array(
-                    'url'       => $this->getCallbackUrl(),
-                    'method'    => 'post',
-                    'headers'   => array(
+                    'url' => $this->getCallbackUrl(),
+                    'method' => 'post',
+                    'headers' => array(
                         'X-Api-Key' => $this->getApiKey('press')
                     ),
-                    'json'      => array(
+                    'json' => array(
                         'association' => $association_id,
                         'button' => $button_id,
                         'type' => 'long'
@@ -84,26 +84,40 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
      * Retrieve the API key from configuration
      *
      * @param string $scope The permissions level required for the action requested
+     * @param int $id Specific ID to look for (for testing)
      *
-     * @return string API key for the requested scope
+     * @throws Exception
+     *
+     * @return mixed active API key for the requested scope/ID or false if no key matches
      */
-    public function getApiKey($scope = 'read')
+    public function getApiKey($scope = 'read', $id = 0)
     {
         switch ($scope) {
-        case 'admin':
-            return Mage::getStoreConfig('accolade/button/api_key');
-        case 'associate':
-            // Fallthrough
-        case 'press':
-            // Fallthrough
-        case 'read':
-            // Fallthrough
-        case 'write':
-            return Mage::getModel('accolade_button/key')
-                ->load($scope, 'scope')
-                ->getApiKey();
-        default: 
-            throw new Exception('Undefined API key scope: $scope');
+            case 'admin':
+                return Mage::getStoreConfig('accolade/button/api_key');
+            case 'associate':
+                // Fallthrough
+            case 'press':
+                // Fallthrough
+            case 'read':
+                // Fallthrough
+            case 'write':
+                /* @var $collection Accolade_Button_Model_Resource_Key_Collection */
+                $collection = Mage::getModel('accolade_button/key')
+                    ->getCollection()
+                    ->addFieldToFilter('active', true)
+                    ->addFieldToFilter('scope', $scope)
+                    ->addFieldToSelect('api_key');
+                if ($id !== 0) {
+                    $collection->addFieldToFilter('entity_id', $id);
+                }
+                if ($collection->getSize()) {
+                    return $collection->getFirstItem()->getApiKey();
+                } else {
+                    return false;
+                }
+            default:
+                throw new Exception('Undefined API key scope: $scope');
         }
     }
 
@@ -131,22 +145,23 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
      * Send a request to the API
      *
      * @param string $endpoint The endpoint to send the API request to
-     * @param string $scope    The scope of the API key needed to make the 
+     * @param string $scope The scope of the API key needed to make the
      * request
-     * @param string $method   The HTTP Method needed to complete the
+     * @param string $method The HTTP Method needed to complete the
      * transaction
-     * @param array  $data     The data to send in the request
-     * @param array  $headers  Any additional headers to send in the request
+     * @param array $data The data to send in the request
+     * @param array $headers Any additional headers to send in the request
      *
      * @return object|boolean $response
      */
     protected function request(
-        $endpoint = '', 
-        $scope = 'read', 
-        $method = 'get', 
-        $data = array(), 
+        $endpoint = '',
+        $scope = 'read',
+        $method = 'get',
+        $data = array(),
         $headers = array()
-    ) {
+    )
+    {
         $apiHeaders = array(
             'X-Api-Key: ' . $this->getApiKey($scope)
         );
@@ -177,13 +192,13 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
             Mage::log('Error on $endpoint request:', null, 'button-error.log', true);
             Mage::log(print_r($e->getMessage(), true), null, 'button-error.log', true);
             Mage::log(
-                print_r($client->getLastRequest(), true), 
-                null, 
-                'button-error.log', 
+                print_r($client->getLastRequest(), true),
+                null,
+                'button-error.log',
                 true
             );
             return $e->getMessage();
-        }   
+        }
     }
 
     /**
@@ -204,7 +219,7 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
                 // The association was successful, set the button data and 
                 // return the association_id
                 $dataResponse = $this->setButtonData(
-                    $response[0]->associd, 
+                    $response[0]->associd,
                     $this->_getCallbackData($buttonId, $response[0]->associd)
                 );
                 return array('association_id' => $response[0]->associd);
@@ -286,7 +301,7 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
      * Set data for an associated button
      *
      * @param string $associationId The association ID of the button
-     * @param array  $data          The data to be attached to the button
+     * @param array $data The data to be attached to the button
      *
      * @return mixed The result of the request
      */
@@ -305,30 +320,30 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
      * Request generation of a new key
      *
      * @param string $scope The permissions scope to set for the newly generated key
-     * @param string $name  The name for the new key
+     * @param string $name The name for the new key
      *
      * @return string Message of success or failure
      */
-    public function newKey($scope = '', $name = '') 
+    public function newKey($scope = '', $name = '')
     {
         $key = $this->request('admin/newkey', 'admin', 'post');
         if (is_object($key) && count($key) > 0) {
             if (isset($key->error)) {
                 $error = $key->error;
                 if (isset($key->reason)) {
-                     $error .= ': ' . $key->reason;
+                    $error .= ': ' . $key->reason;
                 }
                 Mage::log('ERROR: ' . $error, null, 'button-error.log', true);
                 return $error;
             } else {
                 $data = array(
-                    'key'     => $key->apikey,
-                    'prefix'  => $key->prefix,
-                    'name'    => $key->name,
-                    'scope'   => implode(',', $key->scope),
+                    'api_key' => $key->apikey,
+                    'prefix' => $key->prefix,
+                    'name' => $key->name,
+                    'scope' => implode(',', $key->scope),
                     'created' => $key->created,
                     'expires' => $key->expires,
-                    'active'  => 1
+                    'active' => 1
                 );
                 if (!empty($scope)) {
                     $update = $this->updateKey($key->prefix, $scope, $name);
@@ -354,16 +369,16 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
     }
 
     /**
-     * Update API key data on Button Servers. Returns true on success or false on 
+     * Update API key data on Button Servers. Returns true on success or false on
      * failure.
      *
      * @param string $prefix The prefix of the key you would like to update
-     * @param string $scope  The new scope for the key
-     * @param string $name   The new name for the key
+     * @param string $scope The new scope for the key
+     * @param string $name The new name for the key
      *
      * @return bool   $result True on success or false on failure
      * */
-    public function updateKey($prefix, $scope = '', $name = '') 
+    public function updateKey($prefix, $scope = '', $name = '')
     {
         if (empty($prefix)) {
             return 'Prefix must be set to update keys';
@@ -375,7 +390,7 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
             if (is_array($scope)) {
                 $requestData['scope'] = $scope;
             } else {
-                $requestData['scope'] = array (
+                $requestData['scope'] = array(
                     $scope
                 );
             }
@@ -385,7 +400,7 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
         if (isset($result->error)) {
             $error = $result->error;
             if (isset($result->reason)) {
-                 $error .= ': ' . $result->reason;
+                $error .= ': ' . $result->reason;
             }
             Mage::log('Error updating key: ' . $error, null, 'button-error.log');
             return false;
@@ -398,11 +413,11 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
      * Confirm key matches scope
      *
      * @param string $scope the scope to compare with
-     * @param string $key   they key to check
+     * @param string $key they key to check
      *
      * @return bool true if the scope matches, false if not
      */
-    public function checkKey($scope, $key) 
+    public function checkKey($scope, $key)
     {
         $valid = false;
         $keyModel = Mage::getModel('accolade_button/key')

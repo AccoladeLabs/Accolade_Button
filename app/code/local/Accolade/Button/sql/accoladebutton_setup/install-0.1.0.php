@@ -93,7 +93,7 @@ $installer->getConnection()->createTable($associationTable);
 $keyTable = $installer->getConnection()
     ->newTable($installer->getTable('accolade_button_keys'))
     ->addColumn(
-        'id',
+        'entity_id',
         Varien_Db_Ddl_Table::TYPE_INTEGER,
         8,
         array(
