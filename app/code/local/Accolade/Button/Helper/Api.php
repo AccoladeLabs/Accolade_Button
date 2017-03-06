@@ -152,7 +152,7 @@ class Accolade_Button_Helper_Api extends Mage_Core_Helper_Abstract
      * @param array $data The data to send in the request
      * @param array $headers Any additional headers to send in the request
      *
-     * @return object|boolean $response
+     * @return mixed JSON object on success or error message string on failure
      */
     protected function request(
         $endpoint = '',

@@ -57,6 +57,16 @@ class Accolade_Button_Helper_ApiTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($expected, $this->helper->getApiUrl(), 'API URL');
     }
 
+    public function testGetCallbackUrl()
+    {
+        // First, set the store config so we don't have any surprises
+        Mage::getConfig()->saveConfig('web/unsecure/base_url', 'https://my-store.loc/')->reinit();
+        Mage::getConfig()->saveConfig('web/secure/base_url', 'https://my-store.loc/')->reinit();
+        Mage::getConfig()->saveConfig('web/url/use_store', 0)->reinit();
+        $expectedUrl = "https://my-store.loc/accolade_button/api/callback/";
+        $this->assertEquals($expectedUrl, $this->helper->getCallbackUrl(), "Callback URL");
+    }
+
     public function tearDown()
     {
         foreach ($this->dummyKeys as $key) {
