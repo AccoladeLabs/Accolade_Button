@@ -1,0 +1,21 @@
+{
+    "name": "accoladelabs/accolade_button",
+    "description": "Connect your Magento store with the Bt.tn API",
+    "type": "magento-module",
+    "license": "OSL-3.0",
+    "homepage": "https://github.com/AccoladeLabs/Accolade_Button",
+    "authors": [
+        {
+            "name": "Andreas Samoilov",
+            "email": "andreas@accolade.fi"
+        },
+        {
+            "name": "Billy Brawner",
+            "email": "billybrawner@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3",
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}
